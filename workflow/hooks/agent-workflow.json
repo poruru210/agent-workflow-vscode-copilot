@@ -1,0 +1,52 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "sh -c 'd=\"$PWD\"; p=\"\"; while :; do c=\"$d/.github/agent-workflow/scripts/workflow_hook.py\"; if [ -f \"$c\" ]; then p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; break; fi; [ \"$d\" = / ] && break; d=$(dirname \"$d\"); done; if [ -z \"$p\" ]; then c=\"$HOME/.copilot/agent-workflow/scripts/workflow_hook.py\"; [ -f \"$c\" ] && p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; fi; [ -n \"$p\" ] || { echo \"Agent Workflow hook script not found\" >&2; exit 1; }; exec python3 \"$p\"'",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=(Get-Location).Path;$s=$null;while($true){$c=Join-Path $d '.github\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path;break};$p=Split-Path -Parent $d;if((-not $p)-or($p -eq $d)){break};$d=$p};if(-not $s){$c=Join-Path $HOME '.copilot\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path}};if(-not $s){throw 'Agent Workflow hook script not found'};& $s\"",
+        "timeout": 15
+      }
+    ],
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "sh -c 'd=\"$PWD\"; p=\"\"; while :; do c=\"$d/.github/agent-workflow/scripts/workflow_hook.py\"; if [ -f \"$c\" ]; then p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; break; fi; [ \"$d\" = / ] && break; d=$(dirname \"$d\"); done; if [ -z \"$p\" ]; then c=\"$HOME/.copilot/agent-workflow/scripts/workflow_hook.py\"; [ -f \"$c\" ] && p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; fi; [ -n \"$p\" ] || { echo \"Agent Workflow hook script not found\" >&2; exit 1; }; exec python3 \"$p\"'",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=(Get-Location).Path;$s=$null;while($true){$c=Join-Path $d '.github\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path;break};$p=Split-Path -Parent $d;if((-not $p)-or($p -eq $d)){break};$d=$p};if(-not $s){$c=Join-Path $HOME '.copilot\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path}};if(-not $s){throw 'Agent Workflow hook script not found'};& $s\"",
+        "timeout": 15
+      }
+    ],
+    "SubagentStart": [
+      {
+        "type": "command",
+        "command": "sh -c 'd=\"$PWD\"; p=\"\"; while :; do c=\"$d/.github/agent-workflow/scripts/workflow_hook.py\"; if [ -f \"$c\" ]; then p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; break; fi; [ \"$d\" = / ] && break; d=$(dirname \"$d\"); done; if [ -z \"$p\" ]; then c=\"$HOME/.copilot/agent-workflow/scripts/workflow_hook.py\"; [ -f \"$c\" ] && p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; fi; [ -n \"$p\" ] || { echo \"Agent Workflow hook script not found\" >&2; exit 1; }; exec python3 \"$p\"'",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=(Get-Location).Path;$s=$null;while($true){$c=Join-Path $d '.github\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path;break};$p=Split-Path -Parent $d;if((-not $p)-or($p -eq $d)){break};$d=$p};if(-not $s){$c=Join-Path $HOME '.copilot\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path}};if(-not $s){throw 'Agent Workflow hook script not found'};& $s\"",
+        "timeout": 15
+      }
+    ],
+    "SubagentStop": [
+      {
+        "type": "command",
+        "command": "sh -c 'd=\"$PWD\"; p=\"\"; while :; do c=\"$d/.github/agent-workflow/scripts/workflow_hook.py\"; if [ -f \"$c\" ]; then p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; break; fi; [ \"$d\" = / ] && break; d=$(dirname \"$d\"); done; if [ -z \"$p\" ]; then c=\"$HOME/.copilot/agent-workflow/scripts/workflow_hook.py\"; [ -f \"$c\" ] && p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; fi; [ -n \"$p\" ] || { echo \"Agent Workflow hook script not found\" >&2; exit 1; }; exec python3 \"$p\"'",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=(Get-Location).Path;$s=$null;while($true){$c=Join-Path $d '.github\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path;break};$p=Split-Path -Parent $d;if((-not $p)-or($p -eq $d)){break};$d=$p};if(-not $s){$c=Join-Path $HOME '.copilot\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path}};if(-not $s){throw 'Agent Workflow hook script not found'};& $s\"",
+        "timeout": 15
+      }
+    ],
+    "PreCompact": [
+      {
+        "type": "command",
+        "command": "sh -c 'd=\"$PWD\"; p=\"\"; while :; do c=\"$d/.github/agent-workflow/scripts/workflow_hook.py\"; if [ -f \"$c\" ]; then p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; break; fi; [ \"$d\" = / ] && break; d=$(dirname \"$d\"); done; if [ -z \"$p\" ]; then c=\"$HOME/.copilot/agent-workflow/scripts/workflow_hook.py\"; [ -f \"$c\" ] && p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; fi; [ -n \"$p\" ] || { echo \"Agent Workflow hook script not found\" >&2; exit 1; }; exec python3 \"$p\"'",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=(Get-Location).Path;$s=$null;while($true){$c=Join-Path $d '.github\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path;break};$p=Split-Path -Parent $d;if((-not $p)-or($p -eq $d)){break};$d=$p};if(-not $s){$c=Join-Path $HOME '.copilot\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path}};if(-not $s){throw 'Agent Workflow hook script not found'};& $s\"",
+        "timeout": 15
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "sh -c 'd=\"$PWD\"; p=\"\"; while :; do c=\"$d/.github/agent-workflow/scripts/workflow_hook.py\"; if [ -f \"$c\" ]; then p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; break; fi; [ \"$d\" = / ] && break; d=$(dirname \"$d\"); done; if [ -z \"$p\" ]; then c=\"$HOME/.copilot/agent-workflow/scripts/workflow_hook.py\"; [ -f \"$c\" ] && p=\"$(cd \"$(dirname \"$c\")\" && pwd)/$(basename \"$c\")\"; fi; [ -n \"$p\" ] || { echo \"Agent Workflow hook script not found\" >&2; exit 1; }; exec python3 \"$p\"'",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$d=(Get-Location).Path;$s=$null;while($true){$c=Join-Path $d '.github\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path;break};$p=Split-Path -Parent $d;if((-not $p)-or($p -eq $d)){break};$d=$p};if(-not $s){$c=Join-Path $HOME '.copilot\\agent-workflow\\scripts\\workflow_hook.ps1';if(Test-Path $c){$s=(Resolve-Path $c).Path}};if(-not $s){throw 'Agent Workflow hook script not found'};& $s\"",
+        "timeout": 15
+      }
+    ]
+  }
+}

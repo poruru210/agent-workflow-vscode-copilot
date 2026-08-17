@@ -1,0 +1,67 @@
+{
+  "name": "model-catalog",
+  "displayName": "Agent Workflow Model Catalog",
+  "description": "Exposes the live VS Code language model catalog to Agent Workflow for dynamic per-job routing.",
+  "version": "0.3.0",
+  "publisher": "agent-workflow",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.131.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "extensionKind": [
+    "ui"
+  ],
+  "activationEvents": [
+    "onLanguageModelTool:agent-workflow_getModelCatalog",
+    "onCommand:agent-workflow.showModelCatalog"
+  ],
+  "main": "./out/extension.js",
+  "scripts": {
+    "compile": "tsc -p .",
+    "test": "npm run compile && node --test test/*.test.cjs",
+    "package:vsix": "vsce package --allow-missing-repository --out dist/agent-workflow-model-catalog-0.3.0.vsix",
+    "package:vsix:offline": "python scripts/package_vsix.py"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "3.9.2",
+    "typescript": "^5.8.3"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "agent-workflow.showModelCatalog",
+        "title": "Agent Workflow: Show Live Model Catalog"
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "agent-workflow_getModelCatalog",
+        "displayName": "Get Agent Workflow Live Model Catalog",
+        "modelDescription": "Returns the live list of language models currently exposed by the VS Code Language Model API. Use before choosing a model for a subagent. It returns identity and context-capacity metadata, not a fixed quality ranking. Do not infer cost, reasoning/thinking, modality/tool suitability, latency, or quality if those fields are not returned.",
+        "canBeReferencedInPrompt": true,
+        "toolReferenceName": "workflowModels",
+        "icon": "$(server-environment)",
+        "userDescription": "Read the current VS Code model catalog for Agent Workflow dynamic routing.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "vendor": {
+              "type": "string",
+              "description": "Optional exact vendor filter."
+            },
+            "minInputTokens": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Optional minimum maxInputTokens filter."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    ]
+  }
+}
