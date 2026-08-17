@@ -7,7 +7,9 @@ import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-DOC = ROOT / 'docs' / 'index.html'
+DOC_NAME = 'agent-workflow-vscode-copilot-visual-guide-controls-state.html'
+DOC = ROOT / 'docs' / DOC_NAME
+LEGACY_INDEX = ROOT / 'docs' / 'index.html'
 
 
 class MotionGuideParser(HTMLParser):
@@ -30,7 +32,7 @@ class MotionGuideParser(HTMLParser):
 
 
 def main() -> None:
-    assert DOC.is_file(), 'docs/index.html is missing'
+    assert DOC.is_file(), f'docs/{DOC_NAME} is missing'
     text = DOC.read_text(encoding='utf-8')
 
     parser = MotionGuideParser()
@@ -43,92 +45,68 @@ def main() -> None:
         '02 / 基本フロー',
         '03 / Subagent委譲',
         '04 / 失敗時の診断・修正',
-        '基本フロー上の位置',
-        '委譲 →',
-        '← 元のフェーズへ',
-        '診断 →',
-        '← 基本フローへ復帰',
-        '赤が失敗した位置、緑が代表的な再開候補',
-        '復帰先は変更内容で決まる',
-        '候補成果物を変更した',
-        'テスト計画だけを変更した',
-        '追加証拠だけで再判定できる',
-        '外部操作の計画・対象・権限が変わった',
+        '05 / 作業種別ごとの準備',
         '06 / 動的モデル選択',
-        '成果鍵',
-        '独立反証鍵',
+        '07 / 証拠の整理',
+        'なぜ分岐する？',
+        '何をする？',
+        'どこへ戻る？',
+        '未証明だけの場合',
+        '成果鍵 + 独立反証鍵',
     ]
     for marker in required:
         assert marker in visible, f'missing visual-guide marker: {marker}'
 
-    # User-facing Japanese should not regress to the previous literal or mixed wording.
-    language_forbidden = [
-        '主幹',
-        'phaseから',
-        'phase内',
-        'candidate固定',
-        'material risk',
-        'freshnessだけ',
-        'job requirements',
-        'minimum sufficient model',
-        '#workflowモデル選択s',
-        'モデル選択 Selection',
-    ]
-    for marker in language_forbidden:
-        assert marker not in visible, f'awkward/mixed user-facing wording remains: {marker}'
+    # 02 / 03 / 04 use the same left-basic-flow / right-detail grammar.
+    assert text.count('class="flow-diagram"') == 1, 'basic-flow detail diagram must appear once'
+    assert text.count('class="branch-diagram"') == 2, 'delegation and failure diagrams must share branch layout'
+    assert text.count('class="basic"') >= 3, '02 / 03 / 04 must each show the basic flow on the left'
 
-    # The visual guide explains workflow motion only. Installation/deployment belongs in README.
+    # Border colors indicate state only, not phase kind.
+    for forbidden in ['.phase.audit{border-color:', '.phase.test{border-color:', '.phase.gate{border-color:']:
+        assert forbidden not in text, f'phase-kind border color returned: {forbidden}'
+
+    # Controls are consistent across the three animations.
+    for label in ['▶ 再生', 'Ⅱ 停止', '↺ リセット']:
+        assert visible.count(label) == 3, f'control label is not consistent: {label}'
+    for state in ['再生中', '停止中', 'リセット']:
+        assert state in text, f'control state missing: {state}'
+    assert 'is-running' in text and 'is-stopped' in text and 'is-reset' in text
+
+    # Playback is intentionally half-speed relative to the previous guide.
+    assert 'const STEP_MS=1900' in text, 'main playback is not at 0.5x speed'
+    assert 'FLASH_MS=1400' in text, 'branch animation duration is not slowed'
+
+    # Navigation must not contain an animation trigger.
+    nav_match = re.search(r'<nav class="nav">(.*?)</nav>', text, flags=re.S | re.I)
+    assert nav_match, 'navigation is missing'
+    nav = nav_match.group(1)
+    assert '再生' not in nav and '<button' not in nav, 'navigation must not contain playback controls'
+
+    # Guide content only; installation and deployment belong in README.
     placement_forbidden = [
-        'Repository配置',
-        'Global配置',
-        'Installation',
-        'Actions Artifact',
-        'workflow ZIP',
-        '~/.copilot/',
-        '<repo>/.github/',
+        'Repository配置', 'Global配置', 'Installation', 'Actions Artifact',
+        'workflow ZIP', '~/.copilot/', '<repo>/.github/'
     ]
     for marker in placement_forbidden:
-        assert marker not in visible, f'placement/install content leaked into motion guide: {marker}'
+        assert marker not in visible, f'placement/install content leaked into guide: {marker}'
 
-    # Prevent the old three-lane/Z layout, decorative sweep, and the misleading
-    # continuous center rail/moving-dot presentation from returning.
-    layout_forbidden = [
-        'flow-layout',
-        'Orchestration Sidecar',
-        'NORMAL SUCCESS PATH',
-        'FAIL / CORRECTION LOOP',
-        'phase:nth-child(n+7)',
-        'grid-column:6',
-        'grid-column:5',
-        'grid-column:4',
-        'animation:sweep',
-        '.trunk:before',
-        'class="traveler"',
-        'id="traveler"',
-        "getElementById('traveler')",
-        '.フェーズ',
-    ]
-    for marker in layout_forbidden:
-        assert marker not in text, f'legacy/ambiguous visual marker remains: {marker}'
-
-    # Individual phase cards and explicit arrows are the only direction cue in
-    # the detailed basic flow.
-    assert '.phase:not(:last-child):after' in text, 'per-step downward arrows are missing'
-    assert 'class="phase' in text, 'phase cards are missing or lost their CSS class'
-
-    assert text.index('id="overview"') < text.index('id="bootstrap"'), 'overview must precede detailed flows'
+    # Legacy index is only a compatibility redirect, not the canonical guide.
+    assert LEGACY_INDEX.is_file(), 'legacy docs/index.html compatibility redirect is missing'
+    legacy = LEGACY_INDEX.read_text(encoding='utf-8')
+    assert DOC_NAME in legacy, 'legacy docs/index.html does not point to named guide'
+    assert len(legacy) < 2000, 'legacy docs/index.html must remain a small redirect'
 
     scripts = re.findall(r'<script>(.*?)</script>', text, flags=re.S | re.I)
     assert scripts, 'embedded JavaScript is missing'
-    js = '\n'.join(scripts)
     with tempfile.NamedTemporaryFile('w', suffix='.js', encoding='utf-8', delete=False) as f:
-        f.write(js)
+        f.write('\n'.join(scripts))
         js_path = f.name
 
     result = subprocess.run(['node', '--check', js_path], text=True, capture_output=True)
     assert result.returncode == 0, result.stderr or result.stdout
 
-    print('docs/index.html language/motion validation PASS')
+    print(f'docs/{DOC_NAME} validation PASS')
 
 
 if __name__ == '__main__':
