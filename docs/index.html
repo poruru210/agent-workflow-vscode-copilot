@@ -2,91 +2,578 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VS Code Copilot Agent Workflow — Visual Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VS Code Copilot Agent Workflow — Motion Guide</title>
 <style>
-:root{--bg:#071019;--panel:#0d1a27;--panel2:#122337;--text:#edf6ff;--muted:#9fb4c9;--line:#29455f;--blue:#5bbcff;--green:#72deb2;--yellow:#ffd166;--red:#ff7c8e;--purple:#b69cff;--cyan:#63e6e2;--r:18px}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);background:radial-gradient(circle at 8% -5%,#15314a 0,transparent 30rem),radial-gradient(circle at 95% 0,#271e43 0,transparent 28rem),var(--bg);font-family:Inter,system-ui,-apple-system,"Segoe UI","Noto Sans JP",sans-serif;line-height:1.55}button{font:inherit;color:inherit}.wrap{max-width:1500px;margin:auto;padding:0 22px 70px}.hero{min-height:68vh;display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center;padding:55px 0}.eyebrow{font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);font-weight:850}h1{font-size:clamp(2.8rem,5vw,5.8rem);line-height:1.02;letter-spacing:-.05em;margin:.14em 0 .24em}h2{font-size:clamp(1.7rem,3vw,3rem);line-height:1.15;letter-spacing:-.035em;margin:.18em 0}.lead,.desc,.card p,.card li{color:var(--muted)}.chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.chip{border:1px solid var(--line);background:#102033;border-radius:999px;padding:6px 10px;font-size:.78rem}.hero-card,.card,.board{border:1px solid var(--line);background:linear-gradient(180deg,#122337e8,#0b1724e8);border-radius:22px;padding:18px;box-shadow:0 14px 36px #0005}.hero-card h3{margin:0 0 12px}.arch{display:grid;gap:9px}.arch-node{border:1px solid var(--line);background:var(--panel2);border-radius:13px;padding:12px;position:relative;overflow:hidden}.arch-node b{display:block;font-size:.86rem}.arch-node small{color:var(--muted)}.arch-node:after{content:"";position:absolute;left:-40%;bottom:0;width:40%;height:2px;background:linear-gradient(90deg,transparent,var(--blue),transparent);animation:sweep 2.2s linear infinite}@keyframes sweep{to{left:110%}}.nav{position:sticky;top:9px;z-index:20;display:flex;gap:5px;flex-wrap:wrap;align-items:center;border:1px solid var(--line);background:#071019dc;backdrop-filter:blur(15px);border-radius:15px;padding:8px}.nav a,.nav button{border:0;background:transparent;color:var(--muted);text-decoration:none;border-radius:9px;padding:7px 9px;font-size:.78rem;cursor:pointer}.nav a:hover,.nav button:hover{background:var(--panel2);color:var(--text)}.nav .play{margin-left:auto;border:1px solid #5bbcff77;background:#5bbcff18;color:var(--text)}section{padding:58px 0 4px;scroll-margin-top:78px}.head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:20px}.head p{max-width:70ch;margin:0;color:var(--muted)}.callout{border-left:4px solid var(--blue);background:#5bbcff15;border-radius:0 13px 13px 0;padding:13px 15px}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.card h3{margin:.1em 0 .45em}.card ul,.card ol{padding-left:20px}.decision{display:grid;grid-template-columns:.65fr 1.35fr;gap:14px}.diamond-wrap{display:grid;place-items:center;text-align:center}.diamond{width:180px;height:180px;transform:rotate(45deg);border:2px solid var(--blue);border-radius:26px;background:#5bbcff18;display:grid;place-items:center}.diamond span{transform:rotate(-45deg);width:125px;font-weight:800}.branch{border-top:4px solid var(--green)}.branch.normal{border-color:var(--yellow)}.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.74rem;color:var(--muted);margin:10px 0}.legend span{display:flex;gap:6px;align-items:center}.legend i{width:9px;height:9px;border-radius:3px;background:var(--blue)}.legend .g i{background:var(--green)}.legend .y i{background:var(--yellow)}.legend .p i{background:var(--purple)}.legend .r i{background:var(--red)}.controls{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.controls button{border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:7px 10px;cursor:pointer}.controls .primary{border-color:#5bbcff77;background:#5bbcff17}.status{margin-left:auto;color:var(--muted);font-size:.78rem}.flow-layout{display:grid;grid-template-columns:minmax(210px,.72fr) minmax(340px,1fr) minmax(220px,.76fr);gap:17px;align-items:start}.side,.trunk-shell{border:1px solid var(--line);border-radius:18px;background:#0b1724c8;padding:14px}.side-label{font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;font-weight:850;color:var(--blue)}.side h3{font-size:.87rem;margin:.2em 0 .8em}.side-stack,.fail-stack{display:grid;gap:16px}.side-step,.fail-step{border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:10px;position:relative}.side-step b,.fail-step b{display:block;font-size:.75rem}.side-step small,.fail-step small{display:block;color:var(--muted);font-size:.65rem;margin-top:2px}.side-step:not(:last-child):after,.fail-step:not(:last-child):after{content:"↓";position:absolute;left:50%;bottom:-17px;transform:translateX(-50%);font-weight:900;color:var(--blue)}.side-note{margin-top:12px;border:1px dashed #5bbcff44;border-radius:11px;padding:8px;color:var(--muted);font-size:.67rem}.trunk-shell{border-color:#5bbcff44;background:linear-gradient(180deg,#5bbcff09,#07101955)}.trunk-label{text-align:center;color:var(--green);font-weight:850;font-size:.68rem;letter-spacing:.12em;margin-bottom:8px}.trunk{position:relative;display:flex;flex-direction:column;gap:18px;padding:5px 16px}.trunk:before{content:"";position:absolute;left:50%;top:5px;bottom:5px;width:3px;transform:translateX(-50%);background:linear-gradient(var(--blue),var(--green),var(--purple));opacity:.45}.traveler{position:absolute;left:50%;top:8px;width:11px;height:11px;border-radius:50%;background:var(--blue);transform:translateX(-50%);box-shadow:0 0 16px var(--blue);z-index:4;animation:travel 9s ease-in-out infinite}@keyframes travel{0%{top:8px;background:var(--blue)}50%{background:var(--green)}80%{background:var(--purple)}100%{top:calc(100% - 18px);background:var(--green)}}.phase{width:min(100%,390px);margin:auto;position:relative;z-index:5;border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:12px 14px;min-height:84px;transition:.2s}.phase:not(:last-child):after{content:"↓";position:absolute;left:50%;bottom:-22px;transform:translateX(-50%);color:var(--blue);font-weight:900}.phase .n{font-size:.65rem;color:var(--blue);font-weight:850;letter-spacing:.07em}.phase b{display:block;font-size:.82rem;margin:4px 0}.phase small{display:block;color:var(--muted);font-size:.68rem}.phase.audit{border-color:#b69cff77}.phase.test{border-color:#72deb277}.phase.gate{border-color:#ffd16677}.phase.active{transform:scale(1.025);border-color:var(--blue);box-shadow:0 0 0 2px #5bbcff20,0 10px 24px #0005}.phase.done{border-color:#72deb299}.phase.failed{border-color:var(--red);background:#ff7c8e16}.fail-side{border-color:#ff7c8e55}.fail-side .side-label{color:var(--red)}.fail-step{border-color:#ff7c8e44;background:#ff7c8e0a}.fail-step:not(:last-child):after{color:var(--red)}.return{border:1px dashed #ff7c8e77;border-radius:11px;padding:9px;text-align:center;color:#ffc3ca;font-size:.69rem}.fail-stack.demo .fail-step{animation:flash 4.4s ease-in-out 1}.fail-stack.demo .fail-step:nth-child(2){animation-delay:.55s}.fail-stack.demo .fail-step:nth-child(3){animation-delay:1.1s}.fail-stack.demo .fail-step:nth-child(4){animation-delay:1.65s}.fail-stack.demo .fail-step:nth-child(5){animation-delay:2.2s}.fail-stack.demo .return{animation:returnflash 1s ease 2.8s 1}@keyframes flash{0%,70%,100%{box-shadow:none}25%,50%{border-color:var(--red);box-shadow:0 0 0 2px #ff7c8e1b,0 8px 18px #0004;transform:translateX(-3px)}}@keyframes returnflash{50%{background:#ff7c8e18;border-color:var(--red)}}.meaning{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:11px}.meaning div{border:1px solid var(--line);background:#091624;border-radius:10px;padding:7px;text-align:center;color:var(--muted);font-size:.67rem}.meaning b{display:block;color:var(--text)}.detail{margin-top:12px;border:1px solid var(--line);border-radius:14px;background:#091624;padding:13px;display:grid;grid-template-columns:150px 1fr;gap:12px}.detail strong{color:var(--blue)}.detail p{margin:0;color:var(--muted);font-size:.84rem}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.tab{border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:7px 11px;color:var(--muted);cursor:pointer}.tab.active{border-color:var(--blue);background:#5bbcff18;color:var(--text)}.tab-panel{display:none}.tab-panel.active{display:block}.lane{display:grid;grid-template-columns:repeat(7,minmax(140px,1fr));gap:7px;min-width:1030px}.scroll{overflow-x:auto}.lane div{border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:10px;position:relative;min-height:92px}.lane div:not(:last-child):after{content:"→";position:absolute;right:-10px;top:50%;color:var(--blue);font-weight:900}.lane b{display:block;font-size:.75rem}.lane small{color:var(--muted);font-size:.65rem}.router{display:grid;grid-template-columns:.8fr 1.2fr;gap:14px}.route{display:grid;gap:15px}.route div{border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:10px;position:relative}.route div:not(:last-child):after{content:"↓";position:absolute;left:50%;bottom:-17px;color:var(--blue);font-weight:900}.route b{font-size:.76rem}.route small{display:block;color:var(--muted);font-size:.65rem}.catalog{border:1px solid #63e6e277;background:#63e6e20b;border-radius:16px;padding:14px}.model{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;border:1px solid var(--line);background:var(--panel2);border-radius:11px;padding:8px;margin:7px 0}.model .icon{width:28px;height:28px;border-radius:8px;background:#5bbcff17;display:grid;place-items:center;color:var(--blue);font-weight:850}.model b{font-size:.75rem}.model small{display:block;color:var(--muted);font-size:.63rem}.model em{font-style:normal;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 6px;font-size:.63rem}.model.selected{border-color:var(--green);background:#72deb20c}.model.filtered{opacity:.42}.agent-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.agent{border:1px solid var(--line);background:var(--panel2);border-radius:13px;padding:11px}.agent b{font-size:.76rem}.agent small{display:block;color:var(--muted);font-size:.64rem;margin-top:3px}.agent.audit{border-color:#b69cff66}.hook-grid,.packet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.hook,.packet{border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:10px}.hook b,.packet b{font-size:.73rem}.hook small,.packet small{display:block;color:var(--muted);font-size:.64rem}.packet{border-left:4px solid var(--blue)}.packet.rc{border-left-color:var(--red)}.packet.ver{border-left-color:var(--yellow)}.packet.int{border-left-color:var(--green)}.packet.cont{border-left-color:var(--purple)}.twokey{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:stretch;margin-top:14px}.key{border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:13px}.key h3{margin:.1em 0}.plus{display:grid;place-items:center;font-size:1.8rem;color:var(--blue)}.deploy{display:grid;grid-template-columns:1fr 1fr;gap:13px}.path{white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace;background:#07131e;border:1px solid var(--line);border-radius:10px;padding:10px;color:#cfeaff;font-size:.76rem}.ci{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:14px}.ci div{border:1px solid var(--line);background:var(--panel2);border-radius:11px;padding:9px;position:relative}.ci div:not(:last-child):after{content:"→";position:absolute;right:-9px;top:50%;color:var(--blue)}.ci b{font-size:.69rem}.ci small{display:block;color:var(--muted);font-size:.61rem}.go{margin-top:14px;border:1px solid #72deb277;background:#72deb212;border-radius:14px;padding:13px;text-align:center;font-weight:850}.go:before{content:"●";color:var(--green);margin-right:9px;text-shadow:0 0 15px var(--green);animation:blink 1.4s infinite}@keyframes blink{50%{opacity:.25}}footer{margin-top:55px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.72rem}@media(max-width:1050px){.hero{grid-template-columns:1fr}.flow-layout{grid-template-columns:1fr 1.2fr}.fail-side{grid-column:1/-1}.router{grid-template-columns:1fr}.agent-grid,.hook-grid,.packet-grid{grid-template-columns:repeat(2,1fr)}.ci{grid-template-columns:repeat(3,1fr)}}@media(max-width:720px){.wrap{padding:0 13px 45px}.head{display:block}.decision,.grid2,.grid3,.flow-layout,.deploy,.meaning{grid-template-columns:1fr}.detail{grid-template-columns:1fr}.agent-grid,.hook-grid,.packet-grid{grid-template-columns:1fr}.twokey{grid-template-columns:1fr}.plus{transform:rotate(90deg)}.ci{grid-template-columns:1fr 1fr}.nav a:nth-of-type(n+5){display:none}.nav .play{margin-left:0}.status{width:100%;margin-left:0}}
+:root{
+  --bg:#071019; --panel:#0d1a27; --panel2:#122337; --panel3:#172d43;
+  --text:#eef7ff; --muted:#9eb3c8; --line:#29465f;
+  --blue:#5bbcff; --green:#72deb2; --yellow:#ffd166;
+  --red:#ff7c8e; --purple:#b69cff; --cyan:#63e6e2;
+  --blueSoft:rgba(91,188,255,.12); --greenSoft:rgba(114,222,178,.11);
+  --redSoft:rgba(255,124,142,.10); --purpleSoft:rgba(182,156,255,.11);
+  --yellowSoft:rgba(255,209,102,.10); --shadow:0 14px 38px rgba(0,0,0,.27);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--text);
+  background:
+    radial-gradient(circle at 8% -5%,rgba(91,188,255,.17),transparent 31rem),
+    radial-gradient(circle at 95% 0,rgba(182,156,255,.13),transparent 28rem),
+    var(--bg);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP","Yu Gothic UI",sans-serif;
+  line-height:1.55
+}
+button{font:inherit;color:inherit}
+.wrap{max-width:1440px;margin:auto;padding:0 22px 70px}
+.hero{
+  min-height:69vh;display:grid;grid-template-columns:1.08fr .92fr;gap:30px;
+  align-items:center;padding:56px 0 34px
+}
+.kicker{color:var(--blue);font-size:.76rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+h1{font-size:clamp(2.8rem,5vw,5.8rem);line-height:1.01;letter-spacing:-.055em;margin:.15em 0 .25em}
+h2{font-size:clamp(1.8rem,3vw,3rem);line-height:1.12;letter-spacing:-.035em;margin:.18em 0}
+h3{margin:.15em 0 .45em}
+p{color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.chip{border:1px solid var(--line);background:rgba(18,35,55,.68);border-radius:999px;padding:6px 10px;font-size:.78rem}
+.card,.board{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(18,35,55,.9),rgba(10,21,33,.92));
+  border-radius:20px;padding:18px;box-shadow:var(--shadow)
+}
+.callout{border-left:4px solid var(--blue);background:var(--blueSoft);border-radius:0 13px 13px 0;padding:13px 15px;color:#dcecff}
+.hero-viz{padding:20px}
+.hero-viz .hint{color:var(--muted);font-size:.75rem;margin-bottom:12px}
+.hero-flow{display:flex;flex-direction:column;align-items:center;gap:10px}
+.hero-node{width:min(100%,320px);border:1px solid var(--line);background:var(--panel2);border-radius:13px;padding:11px;text-align:center}
+.hero-node b{font-size:.82rem}.hero-node small{display:block;color:var(--muted);font-size:.66rem}
+.hero-arrow{color:var(--blue);font-weight:900}
+.hero-node.current{border-color:var(--blue);box-shadow:0 0 0 2px rgba(91,188,255,.12)}
+
+.nav{
+  position:sticky;top:9px;z-index:30;display:flex;gap:5px;align-items:center;flex-wrap:wrap;
+  border:1px solid var(--line);border-radius:15px;padding:8px;background:rgba(7,16,25,.88);
+  backdrop-filter:blur(15px)
+}
+.nav a,.nav button{border:0;background:transparent;text-decoration:none;color:var(--muted);padding:7px 9px;border-radius:9px;cursor:pointer;font-size:.78rem}
+.nav a:hover,.nav button:hover{background:var(--panel2);color:var(--text)}
+.nav .play{margin-left:auto;color:var(--text);border:1px solid rgba(91,188,255,.5);background:var(--blueSoft)}
+section{padding:58px 0 4px;scroll-margin-top:76px}
+.head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:20px}
+.head p{max-width:72ch;margin:0}
+.eyebrow{color:var(--blue);font-size:.72rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+
+.decision{display:grid;grid-template-columns:.66fr 1.34fr;gap:15px}
+.diamond-wrap{display:grid;place-items:center;text-align:center}
+.diamond{
+  width:180px;height:180px;transform:rotate(45deg);border:2px solid var(--blue);border-radius:26px;
+  background:var(--blueSoft);display:grid;place-items:center
+}
+.diamond span{transform:rotate(-45deg);width:126px;font-weight:850;line-height:1.3}
+.branches{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.branch{border:1px solid var(--line);border-top:4px solid var(--green);border-radius:15px;background:var(--panel2);padding:14px}
+.branch.normal{border-top-color:var(--yellow)}
+.branch ol{padding-left:18px;color:var(--muted);font-size:.84rem}
+
+.mainboard{max-width:760px;margin:0 auto}
+.controls{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.controls button{border:1px solid var(--line);background:var(--panel2);padding:7px 10px;border-radius:9px;cursor:pointer}
+.controls .primary{border-color:rgba(91,188,255,.55);background:var(--blueSoft)}
+.status{margin-left:auto;color:var(--muted);font-size:.77rem}
+.trunk{
+  position:relative;display:flex;flex-direction:column;gap:18px;padding:6px 18px 8px;
+}
+.trunk:before{
+  content:"";position:absolute;left:50%;top:7px;bottom:8px;width:3px;transform:translateX(-50%);
+  background:linear-gradient(var(--blue),var(--green),var(--purple));opacity:.42;border-radius:99px
+}
+.traveler{
+  position:absolute;left:50%;top:11px;width:12px;height:12px;border-radius:50%;
+  transform:translateX(-50%);background:var(--blue);box-shadow:0 0 17px var(--blue);z-index:4;
+  transition:top .65s cubic-bezier(.2,.7,.2,1),background .3s
+}
+.phase{
+  width:min(100%,430px);margin:auto;border:1px solid var(--line);background:var(--panel2);
+  border-radius:14px;padding:12px 14px;min-height:82px;position:relative;z-index:5;transition:.22s
+}
+.phase:not(:last-child):after{
+  content:"↓";position:absolute;left:50%;bottom:-22px;transform:translateX(-50%);color:var(--blue);font-weight:900
+}
+.phase .n{font-size:.64rem;letter-spacing:.08em;color:var(--blue);font-weight:850}
+.phase b{display:block;font-size:.82rem;margin:3px 0}
+.phase small{display:block;color:var(--muted);font-size:.68rem}
+.phase.audit{border-color:rgba(182,156,255,.5)}
+.phase.test{border-color:rgba(114,222,178,.5)}
+.phase.gate{border-color:rgba(255,209,102,.5)}
+.phase.active{border-color:var(--blue);transform:scale(1.025);box-shadow:0 0 0 2px rgba(91,188,255,.12),0 10px 24px rgba(0,0,0,.3)}
+.phase.done{border-color:rgba(114,222,178,.65)}
+.detail{margin-top:14px;border:1px solid var(--line);background:#091624;border-radius:14px;padding:13px;display:grid;grid-template-columns:135px 1fr;gap:12px}
+.detail strong{color:var(--blue)}.detail p{margin:0;font-size:.84rem}
+
+.relationship-intro{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.relationship-intro div{border:1px solid var(--line);border-radius:13px;background:var(--panel2);padding:12px}
+.relationship-intro b{display:block;font-size:.78rem}.relationship-intro small{display:block;color:var(--muted);font-size:.66rem;margin-top:4px}
+.relationship-intro .main{border-top:3px solid var(--green)}
+.relationship-intro .orch{border-top:3px solid var(--blue)}
+.relationship-intro .fail{border-top:3px solid var(--red)}
+
+.orch-scene{display:grid;grid-template-columns:minmax(190px,.7fr) minmax(300px,1.15fr) minmax(190px,.7fr);gap:14px;align-items:center}
+.scene-box{border:1px solid var(--line);border-radius:16px;background:var(--panel2);padding:14px;min-height:118px;display:flex;flex-direction:column;justify-content:center}
+.scene-box b{font-size:.82rem}.scene-box small{display:block;color:var(--muted);font-size:.68rem;margin-top:4px}
+.scene-box.phase-source{border-color:rgba(114,222,178,.46)}
+.scene-box.result{border-color:rgba(114,222,178,.46)}
+.orchestrator-box{border:1px solid rgba(91,188,255,.56);border-radius:18px;background:linear-gradient(180deg,var(--blueSoft),rgba(18,35,55,.85));padding:15px}
+.orchestrator-box h3{font-size:.9rem}
+.orch-chain{display:grid;gap:14px;margin-top:11px}
+.orch-step{border:1px solid var(--line);border-radius:12px;background:var(--panel2);padding:9px;position:relative}
+.orch-step:not(:last-child):after{content:"↓";position:absolute;left:50%;bottom:-17px;transform:translateX(-50%);color:var(--blue);font-weight:900}
+.orch-step b{font-size:.74rem}.orch-step small{display:block;color:var(--muted);font-size:.64rem}
+.invocation-legend{
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:9px;margin:15px 0 0
+}
+.invocation-legend .arrow{text-align:center;color:var(--blue);font-weight:900;font-size:1.25rem}
+.invocation-pulse{animation:nodepulse 1.05s ease 1}
+@keyframes nodepulse{50%{border-color:var(--blue);box-shadow:0 0 0 3px rgba(91,188,255,.12),0 8px 18px rgba(0,0,0,.2);transform:scale(1.02)}}
+.return-pulse{animation:returnpulse 1.05s ease 1}
+@keyframes returnpulse{50%{border-color:var(--green);box-shadow:0 0 0 3px rgba(114,222,178,.11);transform:scale(1.02)}}
+
+.fail-scene{display:grid;grid-template-columns:minmax(200px,.7fr) minmax(330px,1.2fr) minmax(200px,.7fr);gap:14px;align-items:center}
+.fail-origin,.fail-return{border:1px solid var(--line);border-radius:16px;background:var(--panel2);padding:14px;min-height:125px;display:flex;flex-direction:column;justify-content:center}
+.fail-origin{border-color:rgba(255,124,142,.5)}.fail-return{border-color:rgba(114,222,178,.45)}
+.fail-origin b,.fail-return b{font-size:.8rem}.fail-origin small,.fail-return small{color:var(--muted);font-size:.67rem;margin-top:4px}
+.fail-core{border:1px solid rgba(255,124,142,.45);border-radius:18px;background:var(--redSoft);padding:14px}
+.fail-stack{display:grid;gap:14px}
+.fail-step{border:1px solid rgba(255,124,142,.3);border-radius:12px;background:var(--panel2);padding:9px;position:relative}
+.fail-step:not(:last-child):after{content:"↓";position:absolute;left:50%;bottom:-17px;transform:translateX(-50%);color:var(--red);font-weight:900}
+.fail-step b{font-size:.74rem}.fail-step small{display:block;color:var(--muted);font-size:.64rem}
+.fail-step.flash{animation:failflash .85s ease 1}
+@keyframes failflash{50%{border-color:var(--red);box-shadow:0 0 0 3px rgba(255,124,142,.11);transform:scale(1.02)}}
+.fail-return.flash{animation:returnflash .95s ease 1}
+@keyframes returnflash{50%{border-color:var(--green);background:var(--greenSoft);transform:scale(1.02)}}
+.fail-note{margin-top:13px;border-left:4px solid var(--red);background:var(--redSoft);border-radius:0 12px 12px 0;padding:11px;color:#ffdce1;font-size:.78rem}
+
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.tab{border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:7px 11px;color:var(--muted);cursor:pointer}
+.tab.active{border-color:var(--blue);background:var(--blueSoft);color:var(--text)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.scroll{overflow-x:auto}
+.lane{display:grid;grid-template-columns:repeat(7,minmax(140px,1fr));gap:7px;min-width:1030px}
+.lane div{border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:10px;position:relative;min-height:91px}
+.lane div:not(:last-child):after{content:"→";position:absolute;right:-10px;top:50%;color:var(--blue);font-weight:900}
+.lane b{display:block;font-size:.75rem}.lane small{display:block;color:var(--muted);font-size:.65rem;margin-top:3px}
+
+.router{display:grid;grid-template-columns:.78fr 1.22fr;gap:14px}
+.route{display:grid;gap:15px}
+.route div{border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:10px;position:relative}
+.route div:not(:last-child):after{content:"↓";position:absolute;left:50%;bottom:-17px;transform:translateX(-50%);color:var(--blue);font-weight:900}
+.route b{font-size:.76rem}.route small{display:block;color:var(--muted);font-size:.65rem}
+.catalog{border:1px solid rgba(99,230,226,.5);background:rgba(99,230,226,.055);border-radius:16px;padding:14px}
+.model{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;border:1px solid var(--line);background:var(--panel2);border-radius:11px;padding:8px;margin:7px 0}
+.model .icon{width:28px;height:28px;border-radius:8px;background:var(--blueSoft);display:grid;place-items:center;color:var(--blue);font-weight:850}
+.model b{font-size:.75rem}.model small{display:block;color:var(--muted);font-size:.63rem}.model em{font-style:normal;color:var(--muted);font-size:.63rem;border:1px solid var(--line);border-radius:999px;padding:3px 6px}
+.model.selected{border-color:var(--green);background:var(--greenSoft)}.model.filtered{opacity:.4}
+
+.agent-grid,.hook-grid,.packet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.agent,.hook,.packet{border:1px solid var(--line);background:var(--panel2);border-radius:13px;padding:11px}
+.agent b,.hook b,.packet b{font-size:.75rem}.agent small,.hook small,.packet small{display:block;color:var(--muted);font-size:.64rem;margin-top:4px}
+.agent.audit{border-color:rgba(182,156,255,.48)}.packet{border-left:4px solid var(--blue)}
+.packet.rc{border-left-color:var(--red)}.packet.ver{border-left-color:var(--yellow)}.packet.int{border-left-color:var(--green)}.packet.cont{border-left-color:var(--purple)}
+.twokey{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:stretch;margin-top:14px}
+.key{border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:13px}
+.plus{display:grid;place-items:center;font-size:1.8rem;color:var(--blue)}
+.go{margin-top:14px;border:1px solid rgba(114,222,178,.55);background:var(--greenSoft);border-radius:14px;padding:13px;text-align:center;font-weight:850}
+.go:before{content:"●";color:var(--green);margin-right:9px;text-shadow:0 0 15px var(--green)}
+footer{margin-top:55px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.72rem}
+
+@media(max-width:1050px){
+  .hero{grid-template-columns:1fr}
+  .orch-scene,.fail-scene{grid-template-columns:1fr}
+  .invocation-legend{grid-template-columns:1fr}
+  .invocation-legend .arrow{transform:rotate(90deg)}
+  .router{grid-template-columns:1fr}
+  .agent-grid,.hook-grid,.packet-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:720px){
+  .wrap{padding:0 14px 50px}
+  .head{display:block}.head p{margin-top:7px}
+  .decision,.branches,.relationship-intro{grid-template-columns:1fr}
+  .detail{grid-template-columns:1fr}
+  .agent-grid,.hook-grid,.packet-grid{grid-template-columns:1fr}
+  .twokey{grid-template-columns:1fr}.plus{transform:rotate(90deg)}
+  .nav a:nth-of-type(n+6){display:none}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
+
 <header class="hero" id="top">
   <div>
-    <div class="eyebrow">VS Code GitHub Copilot / Agentic Engineering</div>
-    <h1>Agent Workflow<br>Visual Guide</h1>
-    <p class="lead">Copilotに「実装を任せる」だけではなく、<b>主目的・phase・evidenceをOrchestratorが管理し、jobごとにモデルを動的選択し、独立監査と検証で閉包する</b>ためのVS Code Copilot専用ワークフローです。</p>
-    <div class="chips"><span class="chip">Modelを役割へ固定しない</span><span class="chip">Live Model Catalog</span><span class="chip">Stateless Subagents</span><span class="chip">Read-only Audits</span><span class="chip">Two-key Completion</span></div>
-    <div class="callout"><b>見方：</b> 中央は正常成功経路だけを上→下へ流します。左はCopilot固有のOrchestration、右はFAILした時だけ使う診断・修正ループです。</div>
+    <div class="kicker">VS Code GitHub Copilot / Motion Guide</div>
+    <h1>Agent Workflow<br>動きだけを理解する</h1>
+    <p>
+      <b style="color:var(--text)">「Copilot版ワークフローがどう動くか」</b>だけを可視化します。
+      正常経路、Orchestratorによる委譲、FAIL時の診断・修正を別々の図として分離し、必要な関係だけを示します。
+    </p>
+    <div class="chips">
+      <span class="chip">中央縦 = Normal Success Path</span>
+      <span class="chip">委譲 = phaseから呼び出して同じphaseへ返す</span>
+      <span class="chip">FAIL = 主幹から一時離脱して必要gateへ戻る</span>
+      <span class="chip">Audit = read-only</span>
+    </div>
+    <div class="callout"><b>重要：</b> OrchestrationとFAIL loopは「主幹と並行する別工程」ではありません。必要な時だけ主幹から呼ばれる補助動作です。</div>
   </div>
-  <div class="hero-card">
-    <h3>Runtime architecture</h3>
-    <div class="arch">
-      <div class="arch-node"><b>Agent Workflow Orchestrator</b><small>requirements / risk / phase / evidence / routing / Go-No-Go</small></div>
-      <div class="arch-node"><b>#workflowModels</b><small>vscode.lm.selectChatModels() → live availability / identity / context capacity</small></div>
-      <div class="arch-node"><b>Role Agents</b><small>Research / Implement / Root Cause / Audit / Test — modelは固定しない</small></div>
-      <div class="arch-node"><b>Hooks + .agent-workflow/</b><small>read-only enforcement / checkpoint / durable state / job leases</small></div>
+  <div class="card hero-viz">
+    <div class="hint">最小モデル：正常経路だけを見るとこうです</div>
+    <div class="hero-flow">
+      <div class="hero-node current"><b>Work Definition</b><small>何を成功とするか固定</small></div>
+      <div class="hero-arrow">↓</div>
+      <div class="hero-node"><b>Implement / Change</b><small>準備gateを通って変更</small></div>
+      <div class="hero-arrow">↓</div>
+      <div class="hero-node"><b>Audit / Verification</b><small>独立反証とbehavioral evidence</small></div>
+      <div class="hero-arrow">↓</div>
+      <div class="hero-node"><b>Completion / Go-No-Go</b><small>成果鍵 + 独立反証鍵</small></div>
     </div>
   </div>
 </header>
-<nav class="nav"><a href="#bootstrap">Bootstrap</a><a href="#flow">Main Flow</a><a href="#types">Branches</a><a href="#routing">Routing</a><a href="#agents">Agents</a><a href="#evidence">Evidence</a><a href="#deploy">Deploy</a><button class="play" id="tour">▶ 全体フロー再生</button></nav>
 
-<section id="bootstrap"><div class="head"><div><div class="eyebrow">01 / Bootstrap</div><h2>Compactで終えてよいかを最初に判定</h2></div><p>短いread-only回答だけは軽量化。それ以外は実質作業の前にNormal workflowへ昇格します。</p></div>
-<div class="decision"><div class="card diamond-wrap"><div class="diamond"><span>全条件を<br>肯定できる？</span></div><p class="desc">短時間 / 単一目的 / read-only / 低risk / 実装・test・audit・delegationなし / volatile identityなし / material harmなし</p></div><div class="grid2"><div class="card branch"><h3>YES → Compact</h3><ol><li>目的・質問</li><li>対象・正本</li><li>取得時刻/version</li><li>許可scope</li><li>結論と限界</li></ol><p>durable stateやsubagentを作らず終了。</p></div><div class="card branch normal"><h3>NO / 不確実 → Normal</h3><ol><li>Work Definition</li><li>Risk / Plan</li><li>Baseline</li><li>作業種別分岐</li><li>Snapshot / Audit / Test</li><li>Completion</li></ol><p>途中でwrite・長期化・delegation・material riskが出てもNormalへ昇格。</p></div></div></div></section>
+<nav class="nav">
+  <a href="#bootstrap">Bootstrap</a>
+  <a href="#mainflow">主幹</a>
+  <a href="#orchestration">委譲</a>
+  <a href="#failure">FAIL</a>
+  <a href="#worktypes">分岐</a>
+  <a href="#routing">Model</a>
+  <a href="#agents">Agents</a>
+  <a href="#hooks">Hooks</a>
+  <a href="#evidence">Evidence</a>
+  <button class="play" id="tour">▶ 主幹を再生</button>
+</nav>
 
-<section id="flow"><div class="head"><div><div class="eyebrow">02 / Main Flow</div><h2>主幹は中央を上から下へ、一方向</h2></div><p>Z型や蛇行は使いません。正常成功経路とFAILループを空間的に分離します。</p></div>
-<div class="legend"><span><i></i>作業</span><span class="y"><i></i>Gate</span><span class="p"><i></i>Audit</span><span class="g"><i></i>Verification</span><span class="r"><i></i>FAIL</span></div>
-<div class="board"><div class="controls"><button class="primary" id="play">▶ 正常経路を再生</button><button id="pause">Ⅱ</button><button id="reset">↺</button><button id="failDemo">⚠ FAIL分岐を再生</button><span class="status" id="status">STEP 0 / 11 — Work Definition</span></div>
-<div class="flow-layout">
-<aside class="side"><span class="side-label">Orchestration Sidecar</span><h3>工程を横から制御するCopilot固有層</h3><div class="side-stack"><div class="side-step"><b>Orchestrator</b><small>主目的・risk・phase・evidence・Go/No-Go</small></div><div class="side-step"><b>Job Lease</b><small>purpose / scope / authority / evidence / independence</small></div><div class="side-step"><b>#workflowModels</b><small>live model catalog</small></div><div class="side-step"><b>Minimum Sufficient Model</b><small>capability → independence → risk-adjusted cost</small></div><div class="side-step"><b>runSubagent(model=…)</b><small>stateless Role Agent invocation</small></div></div><div class="side-note">左側は「工程」ではありません。各phaseで必要なResearch / Implement / Audit / TestをOrchestratorが呼び出す側面制御です。</div></aside>
-<div class="trunk-shell"><div class="trunk-label">NORMAL SUCCESS PATH — TOP → BOTTOM</div><div class="trunk" id="trunk"><span class="traveler"></span>
-<div class="phase gate" data-title="Work Definition" data-detail="主目的、最低必須成果、禁止代替結果、正常成功経路、scope、受入条件、権限をversion付きmanifestへ固定します。"><span class="n">STEP 0</span><b>Work Definition</b><small>要求・主目的・受入・権限</small></div>
-<div class="phase gate" data-title="Risk / Plan" data-detail="read/write、可逆性、外部効果、security/safety等からriskを分類し、critical path、委譲、証拠予算を決めます。"><span class="n">STEP 1</span><b>Risk / Plan</b><small>risk-adjusted execution plan</small></div>
-<div class="phase" data-title="Baseline" data-detail="変更後の回帰・既存問題を区別できるよう、変更前source、diff、artifact、設定、runtime、必要証拠を固定します。"><span class="n">STEP 2</span><b>Baseline</b><small>変更前比較基準</small></div>
-<div class="phase gate" data-title="Work-type Branch" data-detail="作業package単位で新規実装 / 既存不具合修正 / 保守・移行 / 外部状態変更へ分岐します。"><span class="n">STEP 3</span><b>作業種別分岐</b><small>New / Repair / Maintenance / External</small></div>
-<div class="phase" data-title="Implementation / Change" data-detail="準備gateを通過したplanned semantic deltaとINTに沿い、症状ではなく原因・設計linkへ介入します。"><span class="n">STEP 4</span><b>実装 / 修正 / 変更</b><small>planned delta / INT</small></div>
-<div class="phase audit" data-title="Implementation Snapshot" data-detail="高cost test前にcandidate-bearing identityを固定し、RC/VER/INT/CHG/CONT、U0を正確なsnapshotへ束縛します。"><span class="n">STEP 5</span><b>Implementation Snapshot</b><small>テスト前candidate固定</small></div>
-<div class="phase audit" data-title="Early Independent Audit" data-detail="固定snapshotをread-only・blind-firstで監査し、実装構造とテスト準備構造を高cost test前に反証します。"><span class="n">STEP 6</span><b>Early Independent Audit</b><small>READ ONLY / blind-first</small></div>
-<div class="phase test" data-title="Partitioned Verification" data-detail="U1 = U0 + blind audit追加 + actual impact追加として、supported entryとbehavioral/preservation oracleで分割検証します。"><span class="n">STEP 7</span><b>Partitioned Verification</b><small>U0 → U1 / 分割テスト</small></div>
-<div class="phase gate" data-title="Tested-target Identity Gate" data-detail="実際にテストしたsnapshotと現在candidateが同一か確認します。candidate汚染があればPASSを継承しません。"><span class="n">STEP 8</span><b>Identity Gate</b><small>テストした物 = 今ある物</small></div>
-<div class="phase gate" data-title="Release Candidate" data-detail="必須後段証拠、検証、identity、変更安全性のrelease阻害が閉じた場合だけ最終監査対象として固定します。"><span class="n">STEP 9</span><b>Release Candidate</b><small>最終監査の固定対象</small></div>
-<div class="phase audit" data-title="Final Independent Audit" data-detail="baselineからrelease candidateまでをread-onlyで比較し、C0、two-key、動的/package/runtime/実環境証拠を統合します。"><span class="n">STEP 10</span><b>Final Independent Audit</b><small>READ ONLY / evidence reconciliation</small></div>
-<div class="phase gate" data-title="Completion / Go-No-Go" data-detail="主目的、必須受入、成果鍵+独立反証鍵、必要risk vector、変更安全閉包が揃った時だけ完了/Goです。未証明をPASSへしません。"><span class="n">STEP 11</span><b>Completion / Go-No-Go</b><small>Two-key closure</small></div>
-</div></div>
-<aside class="side fail-side"><span class="side-label">FAIL / CORRECTION LOOP</span><h3>失敗した時だけ右へ分岐</h3><div class="fail-stack" id="failStack"><div class="fail-step"><b>FAIL / 未証明</b><small>正常経路を安全終了へ置換しない</small></div><div class="fail-step"><b>Evidence保存</b><small>input / state / log / identity / environment</small></div><div class="fail-step"><b>RC / VER / TEST-RC</b><small>first fault、責任層、検出漏れ、検証系根因を分離</small></div><div class="fail-step"><b>INT / Correction</b><small>因果link・共有mechanismへ介入</small></div><div class="fail-step"><b>New Snapshot</b><small>actual delta / CHG / CONT / U1を再導出</small></div><div class="return">↩ 影響差分だけ Early Audit / Verification へ戻る</div></div><div class="side-note" style="border-color:#ff7c8e44">同じ証拠しか増えない反復はしません。新情報がなければ再計画・退出・限定No-Goへ。</div></aside>
-</div><div class="meaning"><div><b>中央</b>正常成功経路</div><div><b>左</b>Orchestration / Model / Subagent</div><div><b>右</b>FAIL時の診断・修正</div></div><div class="detail"><strong id="detailTitle">Work Definition</strong><p id="detailText">主目的、最低必須成果、禁止代替結果、正常成功経路、scope、受入条件、権限をversion付きmanifestへ固定します。</p></div></div></section>
+<main>
 
-<section id="types"><div class="head"><div><div class="eyebrow">03 / Work-type Branches</div><h2>実装前の準備は作業種別で変わる</h2></div><p>同じ「変更」でも、新規・修正・移行・外部writeでは必要な因果証拠とaudit位置が異なります。</p></div><div class="tabs"><button class="tab active" data-tab="new">新規実装</button><button class="tab" data-tab="repair">不具合修正</button><button class="tab" data-tab="maint">保守・移行</button><button class="tab" data-tab="external">外部状態変更</button></div>
-<div class="tab-panel active" id="new"><div class="scroll"><div class="lane"><div><b>要求 / 設計</b><small>受入・検証方法</small></div><div><b>Delta / Preservation</b><small>変える/変えない</small></div><div><b>INT</b><small>設計link・consumer</small></div><div><b>Envelope / U0</b><small>正常成功・初期検証</small></div><div><b>Verification Design</b><small>実経路 / oracle</small></div><div><b>Readiness Gate</b><small>主目的実現性</small></div><div><b>初回実装</b><small>→ snapshot</small></div></div></div></div>
-<div class="tab-panel" id="repair"><div class="scroll"><div class="lane"><div><b>Baseline / Reproduce</b><small>raw evidence</small></div><div><b>分割診断</b><small>last-good → first fault</small></div><div><b>RC / VER</b><small>製品根因とescape</small></div><div><b>Blind Challenge</b><small>独立導出</small></div><div><b>INT / Delta / U0</b><small>修正link・保存契約</small></div><div><b>Correction Gate</b><small>根因確定</small></div><div><b>修正実装</b><small>→ snapshot</small></div></div></div></div>
-<div class="tab-panel" id="maint"><div class="scroll"><div class="lane"><div><b>Baseline</b><small>互換性境界</small></div><div><b>Change Purpose</b><small>移行 / rollback</small></div><div><b>Delta / Preservation</b><small>planned delta</small></div><div><b>INT / U0</b><small>consumer・failure</small></div><div><b>Applicability</b><small>既存証拠の適用性</small></div><div><b>Readiness</b><small>主目的維持</small></div><div><b>実装 / 移行</b><small>→ snapshot</small></div></div></div></div>
-<div class="tab-panel" id="external"><div class="scroll"><div class="lane"><div><b>Target Baseline</b><small>account / resource / state</small></div><div><b>Action Manifest</b><small>effect / permission / rollback</small></div><div><b>Action Readiness</b><small>scope / safety</small></div><div><b>Pre-action Audit</b><small>READ ONLY</small></div><div><b>Freshness Gate</b><small>直前identity</small></div><div><b>1管理単位で実行</b><small>許可済み操作のみ</small></div><div><b>Post Verification</b><small>actual effect / U1-post</small></div></div></div></div></section>
+<section id="bootstrap">
+  <div class="head">
+    <div><div class="eyebrow">01 / Bootstrap</div><h2>最初にCompactかNormalかを分ける</h2></div>
+    <p>短いread-only回答だけは軽量経路。変更・test・audit・delegation・material riskがあればNormalへ。</p>
+  </div>
+  <div class="decision">
+    <div class="card diamond-wrap">
+      <div class="diamond"><span>Compact条件を<br>すべて満たす？</span></div>
+    </div>
+    <div class="branches">
+      <div class="branch">
+        <h3>YES → Compact</h3>
+        <ol><li>質問と正本を確認</li><li>必要なfreshnessだけ確認</li><li>回答 + 限界</li></ol>
+        <p>状態変更もdelegationも行わず終了。</p>
+      </div>
+      <div class="branch normal">
+        <h3>NO / 不確実 → Normal</h3>
+        <ol><li>Work Definition</li><li>Risk / Plan</li><li>Baseline</li><li>作業種別分岐</li><li>実装・監査・検証</li></ol>
+        <p>ここから主幹フローへ入ります。</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-<section id="routing"><div class="head"><div><div class="eyebrow">04 / Dynamic Model Routing</div><h2>役割とモデルを分離する</h2></div><p>Custom Agentにはmodelを固定せず、delegation直前にjob requirementと現在利用可能なmodelから最低十分な候補を選びます。</p></div><div class="router"><div class="route"><div><b>① Job Lease</b><small>family / modality / context / tools / ambiguity / harm / independence</small></div><div><b>② #workflowModels</b><small>live catalogを取得</small></div><div><b>③ Hard Capability Filter</b><small>不適合候補を除外</small></div><div><b>④ Minimum Sufficient Set</b><small>必要能力を満たす最小側</small></div><div><b>⑤ Independence / Cost</b><small>相関blind spot / latency / comparable evidence</small></div><div><b>⑥ runSubagent(model=…)</b><small>開始前にjob/model/reasoning/理由を表示</small></div></div><div class="catalog"><h3 style="margin-top:0">Live Model Catalog <small style="color:var(--muted);font-weight:400">— 順位表ではない</small></h3><div class="model selected"><span class="icon">A</span><div><b>候補 A</b><small>vendor / family / version / maxInputTokens</small></div><em>選定例</em></div><div class="model"><span class="icon">B</span><div><b>候補 B</b><small>identity / context capacity</small></div><em>適合</em></div><div class="model filtered"><span class="icon">C</span><div><b>候補 C</b><small>job requirement不足</small></div><em>除外</em></div><div class="callout" style="margin-top:10px"><b>APIが返さないものを推測しない：</b> cost tier / reasoning level / modality・tool suitability / latency / quality ranking。必要ならVS Code現行表示・provider公式説明・実行結果で補います。</div></div></div></section>
+<section id="mainflow">
+  <div class="head">
+    <div><div class="eyebrow">02 / Main Trunk</div><h2>主幹は上から下へ一方向</h2></div>
+    <p>この図だけが通常成功時の工程です。委譲やFAIL処理はここへ混ぜません。</p>
+  </div>
+  <div class="board mainboard">
+    <div class="controls">
+      <button class="primary" id="playMain">▶ 再生</button>
+      <button id="pauseMain">Ⅱ 停止</button>
+      <button id="resetMain">↺ リセット</button>
+      <span class="status" id="mainStatus">STEP 0 / 11 — Work Definition</span>
+    </div>
+    <div class="trunk" id="trunk">
+      <span class="traveler" id="traveler"></span>
+      <div class="phase gate" data-title="Work Definition" data-detail="主目的、最低必須成果、禁止代替結果、正常成功経路、scope、受入条件、権限を固定します。"><span class="n">STEP 0</span><b>Work Definition</b><small>成功条件と境界を固定</small></div>
+      <div class="phase gate" data-title="Risk / Plan" data-detail="risk、critical path、委譲機会、証拠取得、停止条件を計画します。"><span class="n">STEP 1</span><b>Risk / Plan</b><small>risk-adjusted plan</small></div>
+      <div class="phase" data-title="Baseline" data-detail="変更後の回帰と既存問題を区別できるよう変更前状態を凍結します。"><span class="n">STEP 2</span><b>Baseline</b><small>変更前の比較基準</small></div>
+      <div class="phase gate" data-title="Work Type" data-detail="新規実装、既存不具合修正、保守・移行、外部状態変更へ作業package単位で分岐します。"><span class="n">STEP 3</span><b>作業種別分岐</b><small>New / Repair / Maintenance / External</small></div>
+      <div class="phase" data-title="Implement / Change" data-detail="準備gateを通過した設計・根因・INT・planned semantic deltaに沿って変更します。"><span class="n">STEP 4</span><b>実装 / 修正 / 変更</b><small>原因・設計linkへ介入</small></div>
+      <div class="phase audit" data-title="Implementation Snapshot" data-detail="高cost test前にcandidate-bearing identityを固定します。"><span class="n">STEP 5</span><b>Implementation Snapshot</b><small>テスト前candidate固定</small></div>
+      <div class="phase audit" data-title="Early Independent Audit" data-detail="固定snapshotをread-onlyでblind-first監査し、構造欠陥とtest準備不足を高cost test前に見つけます。"><span class="n">STEP 6</span><b>Early Independent Audit</b><small>READ ONLY / blind-first</small></div>
+      <div class="phase test" data-title="Partitioned Verification" data-detail="U0へblind audit追加とactual impact追加を加えたU1を、supported pathとbehavioral oracleで検証します。"><span class="n">STEP 7</span><b>Partitioned Verification</b><small>U0 → U1 / 分割検証</small></div>
+      <div class="phase gate" data-title="Identity Gate" data-detail="テストしたsnapshotと現在candidateが同一であることを確認します。"><span class="n">STEP 8</span><b>Tested-target Identity Gate</b><small>テスト対象と現在対象の同一性</small></div>
+      <div class="phase gate" data-title="Release Candidate" data-detail="必要証拠、test、identity、変更安全性が揃ったcandidateだけを最終監査対象として固定します。"><span class="n">STEP 9</span><b>Release Candidate</b><small>最終監査対象を固定</small></div>
+      <div class="phase audit" data-title="Final Independent Audit" data-detail="baselineからrelease candidateまでをread-onlyで比較し、動的・統合・package・runtime evidenceも統合します。"><span class="n">STEP 10</span><b>Final Independent Audit</b><small>READ ONLY / evidence reconciliation</small></div>
+      <div class="phase gate" data-title="Completion / Go-No-Go" data-detail="主目的、必須受入、変更安全閉包、成果鍵と独立反証鍵が閉じた場合だけ完了/Goとします。"><span class="n">STEP 11</span><b>Completion / Go-No-Go</b><small>Two-key closure</small></div>
+    </div>
+    <div class="detail" id="mainDetail"><strong>Current Phase</strong><div><h3>Work Definition</h3><p>主目的、最低必須成果、禁止代替結果、正常成功経路、scope、受入条件、権限を固定します。</p></div></div>
+  </div>
+</section>
 
-<section id="agents"><div class="head"><div><div class="eyebrow">05 / Role Agents</div><h2>Roleは固定、Invocationはstateless</h2></div><p>retryは同じsubagentへのfollow-upではなく、新しいversion付きleaseを持つ別invocationです。</p></div><div class="agent-grid"><div class="agent"><b>Workflow Researcher</b><small>正本・ログ・環境・証拠取得 / read-only中心</small></div><div class="agent"><b>Workflow Implementer</b><small>planned delta / INTに沿う実装・修正</small></div><div class="agent audit"><b>Root Cause Reviewer</b><small>blind-firstでfirst fault / 責任層 / 代替原因</small></div><div class="agent audit"><b>Early Auditor</b><small>snapshot構造・test準備 / READ ONLY</small></div><div class="agent"><b>Workflow Tester</b><small>U1 partition / behavioral & preservation oracle</small></div><div class="agent audit"><b>Final Auditor</b><small>release candidate / READ ONLY</small></div><div class="agent audit"><b>Pre Action Auditor</b><small>外部write前のtarget / permission / effect / rollback</small></div><div class="agent"><b>Orchestrator</b><small>全jobを統合。model routingとphase ownership</small></div></div></section>
+<section id="orchestration">
+  <div class="head">
+    <div><div class="eyebrow">03 / Orchestration</div><h2>委譲は「主幹のphaseから呼び、結果を同じphaseへ返す」</h2></div>
+    <p>Orchestrationは主幹とは別の時間軸ではありません。親が必要と判断したphase内で、一時的にsubagentを呼ぶ動作です。</p>
+  </div>
+  <div class="relationship-intro">
+    <div class="main"><b>主幹</b><small>進行中のphaseを所有する</small></div>
+    <div class="orch"><b>委譲</b><small>phase内のbounded jobだけ一時的に外へ出す</small></div>
+    <div class="fail"><b>戻り</b><small>subagentのterminal resultを親が統合し、そのphaseの判定へ戻す</small></div>
+  </div>
+  <div class="board">
+    <div class="controls">
+      <button class="primary" id="playOrch">▶ 委譲1回を再生</button>
+      <span class="status" id="orchStatus">例: Early Audit phase</span>
+    </div>
+    <div class="orch-scene">
+      <div class="scene-box phase-source" id="orchSource">
+        <div class="eyebrow">MAIN PHASE</div><b id="orchPhaseName">Early Independent Audit</b>
+        <small>親がこのphaseで独立reviewが必要と判断</small>
+      </div>
 
-<section id="hooks"><div class="head"><div><div class="eyebrow">06 / Hooks</div><h2>監査境界を補助的に強制</h2></div><p>Hookは正しさの証拠ではなく、read-only enforcement、checkpoint、job状態記録、未解消claim警告の補助です。</p></div><div class="hook-grid"><div class="hook"><b>SessionStart</b><small>durable stateを再取得。Compactならworkspaceを汚さない。</small></div><div class="hook"><b>PreToolUse</b><small>audit phaseのwriteをdeny。未証明commandはask。</small></div><div class="hook"><b>SubagentStart</b><small>stateless lease boundaryを注入。</small></div><div class="hook"><b>SubagentStop</b><small>job runtimeをterminal化。</small></div><div class="hook"><b>PreCompact</b><small>context圧縮前checkpoint。</small></div><div class="hook"><b>Stop</b><small>mandatory claim残存時に完了警告。</small></div></div></section>
+      <div class="orchestrator-box" id="orchBox">
+        <div class="eyebrow">PARENT ORCHESTRATOR</div>
+        <h3>Bounded delegation</h3>
+        <div class="orch-chain">
+          <div class="orch-step" id="os1"><b>1. Job Lease</b><small>目的 / scope / authority / evidence / independence</small></div>
+          <div class="orch-step" id="os2"><b>2. #workflowModels</b><small>live catalogを取得</small></div>
+          <div class="orch-step" id="os3"><b>3. Model Selection</b><small>minimum sufficient / risk-adjusted</small></div>
+          <div class="orch-step" id="os4"><b>4. runSubagent()</b><small>role agentをstateless invocation</small></div>
+        </div>
+      </div>
 
-<section id="evidence"><div class="head"><div><div class="eyebrow">07 / Evidence Architecture</div><h2>「何を証明する記録か」を分離</h2></div><p>根因、検出漏れ、介入、変更安全、停止合成、検証モデルを別packetとして管理し、Evidence Dependency Mapで再利用/失効を制御します。</p></div><div class="packet-grid"><div class="packet rc"><b>RC</b><small>raw evidence / first fault / 責任層 / 代替原因</small></div><div class="packet ver"><b>VER</b><small>verification escape / earliest break</small></div><div class="packet"><b>VM / TEST-RC</b><small>state / identity / ordering / clock / observer</small></div><div class="packet int"><b>INT</b><small>どの因果・設計linkへ介入するか</small></div><div class="packet"><b>CHG</b><small>planned vs actual delta / preservation / impact cone</small></div><div class="packet cont"><b>CONT</b><small>正常成功envelope / NewlyStopped / recovery</small></div><div class="packet"><b>U0 → U1</b><small>blind audit + actual impactは追加のみ</small></div><div class="packet"><b>Evidence Map</b><small>claim → evidence / consumer / invalidation trigger</small></div></div><div class="twokey"><div class="key"><div class="eyebrow">Outcome Key</div><h3>成果鍵</h3><p>主目的の正常成功経路、最低必須成果、必須受入条件が現candidateで成立。</p></div><div class="plus">＋</div><div class="key"><div class="eyebrow" style="color:var(--purple)">Independent Refutation Key</div><h3>独立反証鍵</h3><p>元要求・正本・baselineへ戻り、C0、変更安全性、残余不確実性を独立起源から反証。</p></div></div></section>
+      <div class="scene-box result" id="orchResult">
+        <div class="eyebrow">TERMINAL RESULT</div><b>Finding / Evidence / Unproven</b>
+        <small>親が正本と照合し、元のphaseのPASS / 修正要 / 未証明へ統合</small>
+      </div>
+    </div>
+    <div class="invocation-legend">
+      <div class="scene-box"><b>主幹から出るのは「作業package」だけ</b><small>phase ownershipは親から移らない</small></div>
+      <div class="arrow">→ invoke →<br>← result ←</div>
+      <div class="scene-box"><b>Subagentはstateless</b><small>retryはfollow-upではなく、新しいversion付きleaseの新規invocation</small></div>
+    </div>
+  </div>
+</section>
 
-<section id="deploy"><div class="head"><div><div class="eyebrow">08 / Deployment & CI</div><h2>workflow正本は1セット。配置先だけが違う</h2></div><p>Repository/Globalの二重ソースは持ちません。CIでworkflow ZIPとVSIXを生成します。</p></div><div class="deploy"><div class="card"><h3>Repository配置</h3><p>workflow ZIPの中身を対象repoの `.github/` へ。</p><div class="path">&lt;repo&gt;/.github/
-├─ agents/
-├─ skills/
-├─ hooks/
-├─ instructions/
-└─ agent-workflow/</div></div><div class="card"><h3>Global配置</h3><p>同じworkflow ZIPの中身を `~/.copilot/` へ。</p><div class="path">~/.copilot/
-├─ agents/
-├─ skills/
-├─ hooks/
-├─ instructions/
-└─ agent-workflow/</div></div></div><div class="callout" style="margin-top:13px"><b>Model Catalog Extension：</b> `extension/src` を正本としてCIでVSIX化し、VS Codeの <b>Extensions: Install from VSIX...</b> で導入します。`.agent-workflow/` はインストール先ではなくworkspace-local runtime stateです。</div><div class="ci"><div><b>Checkout</b><small>source</small></div><div><b>Workflow validation</b><small>policy/hooks/layout</small></div><div><b>TS build/test</b><small>extension</small></div><div><b>VSIX</b><small>vsce package</small></div><div><b>Workflow ZIP</b><small>single source</small></div><div><b>Artifact</b><small>VSIX + ZIP</small></div></div></section>
+<section id="failure">
+  <div class="head">
+    <div><div class="eyebrow">04 / Failure & Correction</div><h2>FAIL時だけ主幹から一時離脱する</h2></div>
+    <p>FAIL loopは主幹の横で常時走る工程ではありません。任意phaseがFAIL/未証明になった時だけ入り、根因と変更影響を処分して必要な最も早いgateへ戻ります。</p>
+  </div>
+  <div class="board">
+    <div class="controls"><button class="primary" id="playFail">⚠ FAIL経路を再生</button><span class="status" id="failStatus">例: Partitioned Verification でFAIL</span></div>
+    <div class="fail-scene">
+      <div class="fail-origin" id="failOrigin">
+        <div class="eyebrow" style="color:var(--red)">MAIN FLOW</div><b>Partitioned Verification — FAIL</b>
+        <small>証拠を保存し、その場で次のassertionや症状行へpatchしない</small>
+      </div>
 
-<section id="completion"><div class="head"><div><div class="eyebrow">09 / Completion</div><h2>テストPASSだけでは完了しない</h2></div><p>主目的、変更安全性、identity、独立反証まで同時に閉じて初めてGoです。</p></div><div class="grid3"><div class="card"><h3>目的</h3><ul><li>正常成功経路PASS</li><li>最低必須成果PASS</li><li>必須受入PASS</li><li>禁止代替結果へ逃げない</li></ul></div><div class="card"><h3>変更安全</h3><ul><li>planned / actual delta</li><li>preservation contract</li><li>impact cone / cut proof</li><li>material failure処分</li></ul></div><div class="card"><h3>証拠・監査</h3><ul><li>C0</li><li>成果鍵 + 独立反証鍵</li><li>U0→U1 / identity</li><li>Early + Final Audit</li></ul></div></div><div class="go">すべて閉じた時だけ Completion / Go</div></section>
+      <div class="fail-core">
+        <div class="fail-stack">
+          <div class="fail-step" id="fs1"><b>1. Evidence保存</b><small>input / state / log / identity / environment</small></div>
+          <div class="fail-step" id="fs2"><b>2. RC / VER / TEST-RC</b><small>first fault / 責任層 / 検出漏れ / 検証系根因を分離</small></div>
+          <div class="fail-step" id="fs3"><b>3. Root-cause Challenge</b><small>必要ならblind-first read-only独立導出</small></div>
+          <div class="fail-step" id="fs4"><b>4. INT / Correction</b><small>症状ではなく因果link・共有mechanismへ介入</small></div>
+          <div class="fail-step" id="fs5"><b>5. New Snapshot / CHG / U1</b><small>actual deltaと影響差分を再導出</small></div>
+        </div>
+      </div>
 
-<footer><b>Source basis:</b> `workflow/agents`, `workflow/skills`, `workflow/hooks`, `workflow/agent-workflow/policy`, `extension/src`, `.github/workflows/ci.yml`。このHTMLは理解支援用で、詳細な規範・例外・適用条件はrepository内policyを正本とします。</footer>
+      <div class="fail-return" id="failReturn">
+        <div class="eyebrow" style="color:var(--green)">RETURN TO MAIN FLOW</div><b>必要な最も早いgateへ戻る</b>
+        <small>例: New Snapshot → Early Audit → Verification。未変更claimはEvidence Mapで継承。</small>
+      </div>
+    </div>
+    <div class="fail-note"><b>反復条件：</b> 新しい識別証拠、反証可能な予測、判断を変える合理的見込みがある場合だけ再度回します。同じ証拠しか増えない反復は退出・再計画・限定No-Goへ。</div>
+  </div>
+</section>
+
+<section id="worktypes">
+  <div class="head">
+    <div><div class="eyebrow">05 / Work-type Branch</div><h2>主幹の「作業種別分岐」で準備経路が変わる</h2></div>
+    <p>どの経路も準備が終われば、実装/変更 → Snapshot → Audit → Verificationという同じ主幹へ合流します。</p>
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-tab="new">新規実装</button>
+    <button class="tab" data-tab="repair">既存不具合修正</button>
+    <button class="tab" data-tab="maint">保守・移行</button>
+    <button class="tab" data-tab="external">外部状態変更</button>
+  </div>
+  <div class="tab-panel active" id="new"><div class="scroll"><div class="lane">
+    <div><b>要求 / 設計</b><small>受入・検証方法</small></div><div><b>Delta / Preservation</b><small>変える/変えない</small></div><div><b>INT</b><small>設計link・consumer</small></div><div><b>Envelope / U0</b><small>正常成功集合</small></div><div><b>Verification Design</b><small>path / oracle</small></div><div><b>Readiness Gate</b><small>実装準備</small></div><div><b>初回実装</b><small>主幹へ合流</small></div>
+  </div></div></div>
+  <div class="tab-panel" id="repair"><div class="scroll"><div class="lane">
+    <div><b>Baseline / Reproduce</b><small>raw evidence</small></div><div><b>分割診断</b><small>last-good → first fault</small></div><div><b>RC / VER</b><small>製品/検出漏れ分離</small></div><div><b>Root-cause Challenge</b><small>blind-first</small></div><div><b>INT / Delta / U0</b><small>修正link</small></div><div><b>Correction Gate</b><small>修正着手</small></div><div><b>修正実装</b><small>主幹へ合流</small></div>
+  </div></div></div>
+  <div class="tab-panel" id="maint"><div class="scroll"><div class="lane">
+    <div><b>Baseline</b><small>現状</small></div><div><b>Change Purpose</b><small>互換/rollback</small></div><div><b>Delta / Preservation</b><small>変更境界</small></div><div><b>INT / U0</b><small>impact予測</small></div><div><b>Evidence Applicability</b><small>既存証拠</small></div><div><b>Change Readiness</b><small>主目的維持</small></div><div><b>実装 / 移行</b><small>主幹へ合流</small></div>
+  </div></div></div>
+  <div class="tab-panel" id="external"><div class="scroll"><div class="lane">
+    <div><b>Target Baseline</b><small>resource/current state</small></div><div><b>Action Manifest</b><small>effect/permission</small></div><div><b>Action Readiness</b><small>scope/safety</small></div><div><b>Pre-action Audit</b><small>READ ONLY</small></div><div><b>Freshness Gate</b><small>直前identity</small></div><div><b>実行</b><small>1管理単位</small></div><div><b>Post Verification</b><small>actual effect</small></div>
+  </div></div></div>
+</section>
+
+<section id="routing">
+  <div class="head">
+    <div><div class="eyebrow">06 / Dynamic Model Routing</div><h2>Model選択は各subagent invocationの直前</h2></div>
+    <p>Role Agentにmodelを固定せず、job requirementsと現在利用できるmodel集合からminimum sufficient modelを選びます。</p>
+  </div>
+  <div class="router">
+    <div class="route">
+      <div><b>Job Lease</b><small>family / context / tools / ambiguity / harm / independence</small></div>
+      <div><b>#workflowModels</b><small>live catalog</small></div>
+      <div><b>Hard capability filter</b><small>不適合候補を除外</small></div>
+      <div><b>Minimum sufficient set</b><small>過剰なmodelを常用しない</small></div>
+      <div><b>Independence / Cost</b><small>相関blind spotとrisk-adjusted total cost</small></div>
+      <div><b>runSubagent(model=…)</b><small>開始前にjob/model/reasoning/理由を表示</small></div>
+    </div>
+    <div class="catalog">
+      <h3>Live Model Catalog</h3>
+      <p>availability / identity / family / version / maxInputTokens等の現在情報。知能ランキングではありません。</p>
+      <div class="model selected"><span class="icon">A</span><div><b>候補 A</b><small>job requirementを満たし最低十分</small></div><em>選定例</em></div>
+      <div class="model"><span class="icon">B</span><div><b>候補 B</b><small>能力は満たすが過剰または独立性上不要</small></div><em>適合</em></div>
+      <div class="model filtered"><span class="icon">C</span><div><b>候補 C</b><small>hard requirement不足</small></div><em>除外</em></div>
+      <div class="callout" style="margin-top:12px"><b>APIが返さない情報を捏造しない：</b> cost tier / thinking / vision・tool適合性 / latency / quality rankingは追加証拠が必要。</div>
+    </div>
+  </div>
+</section>
+
+<section id="agents">
+  <div class="head">
+    <div><div class="eyebrow">07 / Role Agents</div><h2>Custom Agentはrole / tools / authorityを固定する器</h2></div>
+    <p>モデルは固定しません。Audit rolesは対象をread-onlyに保ちます。</p>
+  </div>
+  <div class="agent-grid">
+    <div class="agent"><b>Workflow Researcher</b><small>正本・log・外部情報を調査。read-oriented。</small></div>
+    <div class="agent"><b>Workflow Implementer</b><small>準備gateに沿って実装・修正。</small></div>
+    <div class="agent audit"><b>Root Cause Reviewer</b><small>blind-first根因導出。READ ONLY。</small></div>
+    <div class="agent audit"><b>Early Auditor</b><small>snapshot構造とtest準備を反証。READ ONLY。</small></div>
+    <div class="agent"><b>Workflow Tester</b><small>U1 partitionとoracleを実行。</small></div>
+    <div class="agent audit"><b>Final Auditor</b><small>release candidateを統合監査。READ ONLY。</small></div>
+    <div class="agent audit"><b>Pre Action Auditor</b><small>外部write前のtarget/effect/safety。READ ONLY。</small></div>
+    <div class="agent"><b>Orchestrator</b><small>phase ownership、routing、integration、Go/No-Go。</small></div>
+  </div>
+</section>
+
+<section id="hooks">
+  <div class="head">
+    <div><div class="eyebrow">08 / Hooks</div><h2>Hooksは主幹を進めるものではなく、境界違反を抑える</h2></div>
+    <p>phase進行の補助ガードです。Hookが動いたこと自体はcorrectness evidenceではありません。</p>
+  </div>
+  <div class="hook-grid">
+    <div class="hook"><b>SessionStart</b><small>durable stateがあれば再入場contextを追加。</small></div>
+    <div class="hook"><b>PreToolUse</b><small>audit phaseのwriteをdeny。未知terminal操作はask。</small></div>
+    <div class="hook"><b>SubagentStart</b><small>stateless invocation境界を明示。</small></div>
+    <div class="hook"><b>SubagentStop</b><small>job runtimeをterminalへ。</small></div>
+    <div class="hook"><b>PreCompact</b><small>context圧縮前にcheckpoint。</small></div>
+    <div class="hook"><b>Stop</b><small>mandatory claimが残る場合、完了誤認を警告。</small></div>
+  </div>
+</section>
+
+<section id="evidence">
+  <div class="head">
+    <div><div class="eyebrow">09 / Evidence</div><h2>異なる命題を同じ「テストPASS」に潰さない</h2></div>
+    <p>根因、検出漏れ、介入、変更安全、停止合成、検証モデルを別packetとして保持し、最終的に成果鍵と独立反証鍵を閉じます。</p>
+  </div>
+  <div class="packet-grid">
+    <div class="packet rc"><b>RC</b><small>Root Cause / first fault / 責任層 / 代替原因</small></div>
+    <div class="packet ver"><b>VER / TEST-RC / VM</b><small>検出漏れ / false PASS・FAIL / state・identity・ordering</small></div>
+    <div class="packet int"><b>INT</b><small>どの因果・設計linkへ介入するか</small></div>
+    <div class="packet"><b>CHG</b><small>planned vs actual delta / preservation / impact cone</small></div>
+    <div class="packet cont"><b>CONT</b><small>正常成功envelope / NewlyStopped / guard合成 / recovery</small></div>
+    <div class="packet"><b>U0 → U1</b><small>blind auditとactual impactは追加のみ。黙って弱化しない。</small></div>
+    <div class="packet"><b>Evidence Map</b><small>claim → evidence / consumer / risk / invalidation trigger</small></div>
+    <div class="packet"><b>Review Key</b><small>同一snapshot・同一claimの意味のない再監査を防ぐ</small></div>
+  </div>
+  <div class="twokey">
+    <div class="key"><div class="eyebrow" style="color:var(--green)">Outcome Key</div><h3>成果鍵</h3><p>主目的の正常成功経路、最低必須成果、必須受入が現candidateで成立。</p></div>
+    <div class="plus">＋</div>
+    <div class="key"><div class="eyebrow" style="color:var(--purple)">Independent Refutation Key</div><h3>独立反証鍵</h3><p>C0、変更安全性、残余不確実性を独立起源から反証確認。</p></div>
+  </div>
+  <div class="go">両方が閉じて初めて Completion / Go</div>
+</section>
+
+</main>
+
+<footer>
+  このHTMLはワークフローの「動き」だけを説明する可視化です。詳細な規範・例外条件はpolicyを正本とします。
+</footer>
 </div>
+
 <script>
-(()=>{const phases=[...document.querySelectorAll('.phase')],status=document.getElementById('status'),title=document.getElementById('detailTitle'),detail=document.getElementById('detailText'),fail=document.getElementById('failStack');let i=0,t=null;function show(n,scroll=false){i=Math.max(0,Math.min(phases.length-1,n));phases.forEach((p,x)=>{p.classList.toggle('active',x===i);p.classList.toggle('done',x<i);p.classList.remove('failed')});const p=phases[i];status.textContent=`STEP ${i} / ${phases.length-1} — ${p.dataset.title}`;title.textContent=p.dataset.title;detail.textContent=p.dataset.detail;if(scroll)p.scrollIntoView({behavior:'smooth',block:'center'})}function play(scroll=false){clearInterval(t);show(i,scroll);t=setInterval(()=>{if(i>=phases.length-1){clearInterval(t);return}show(i+1,scroll)},950)}document.getElementById('play').onclick=()=>play(false);document.getElementById('pause').onclick=()=>clearInterval(t);document.getElementById('reset').onclick=()=>{clearInterval(t);i=0;show(0)};document.getElementById('tour').onclick=()=>{document.getElementById('flow').scrollIntoView({behavior:'smooth'});setTimeout(()=>{i=0;play(true)},600)};document.getElementById('failDemo').onclick=()=>{clearInterval(t);const p=phases[Math.min(Math.max(i,4),8)];p.classList.add('failed');fail.classList.remove('demo');void fail.offsetWidth;fail.classList.add('demo');status.textContent=`FAIL分岐 — ${p.dataset.title} → diagnosis / correction`;setTimeout(()=>{p.classList.remove('failed');fail.classList.remove('demo');show(i)},4400)};phases.forEach((p,n)=>p.onclick=()=>{clearInterval(t);show(n)});document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active')});show(0)})();
+(() => {
+  const phases=[...document.querySelectorAll('.phase')];
+  const traveler=document.getElementById('traveler');
+  const trunk=document.getElementById('trunk');
+  const status=document.getElementById('mainStatus');
+  const detail=document.getElementById('mainDetail');
+  let index=0, timer=null;
+
+  function travelerTop(i){
+    const p=phases[i];
+    return p.offsetTop + Math.max(8,(p.offsetHeight-12)/2);
+  }
+  function show(i){
+    index=Math.max(0,Math.min(phases.length-1,i));
+    phases.forEach((p,n)=>{p.classList.toggle('active',n===index);p.classList.toggle('done',n<index)});
+    traveler.style.top=travelerTop(index)+'px';
+    const p=phases[index];
+    status.textContent=`STEP ${index} / ${phases.length-1} — ${p.dataset.title}`;
+    detail.querySelector('h3').textContent=p.dataset.title;
+    detail.querySelector('p').textContent=p.dataset.detail;
+  }
+  function play(){
+    clearInterval(timer);
+    show(index);
+    timer=setInterval(()=>{ if(index>=phases.length-1){clearInterval(timer);return} show(index+1)},950);
+  }
+  function reset(){clearInterval(timer);index=0;show(0)}
+  document.getElementById('playMain').onclick=play;
+  document.getElementById('pauseMain').onclick=()=>clearInterval(timer);
+  document.getElementById('resetMain').onclick=reset;
+  phases.forEach((p,i)=>p.onclick=()=>{clearInterval(timer);show(i)});
+  window.addEventListener('resize',()=>show(index));
+  document.getElementById('tour').onclick=()=>{
+    document.getElementById('mainflow').scrollIntoView({behavior:'smooth'});
+    setTimeout(()=>{reset();play()},500);
+  };
+
+  const orchIds=['orchSource','os1','os2','os3','os4','orchResult'];
+  document.getElementById('playOrch').onclick=()=>{
+    orchIds.forEach(id=>document.getElementById(id).classList.remove('invocation-pulse','return-pulse'));
+    let i=0;
+    const run=()=>{
+      if(i>=orchIds.length) return;
+      const el=document.getElementById(orchIds[i]);
+      el.classList.add(i===orchIds.length-1?'return-pulse':'invocation-pulse');
+      setTimeout(()=>el.classList.remove('invocation-pulse','return-pulse'),900);
+      i++; if(i<orchIds.length) setTimeout(run,750);
+    };
+    run();
+  };
+
+  const failSteps=['failOrigin','fs1','fs2','fs3','fs4','fs5','failReturn'];
+  document.getElementById('playFail').onclick=()=>{
+    failSteps.forEach(id=>document.getElementById(id).classList.remove('flash'));
+    let i=0;
+    const run=()=>{
+      if(i>=failSteps.length) return;
+      const el=document.getElementById(failSteps[i]);
+      el.classList.add('flash');
+      setTimeout(()=>el.classList.remove('flash'),800);
+      i++; if(i<failSteps.length) setTimeout(run,680);
+    };
+    run();
+  };
+
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.onclick=()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));
+      btn.classList.add('active'); document.getElementById(btn.dataset.tab).classList.add('active');
+    };
+  });
+
+  show(0);
+})();
 </script>
 </body>
 </html>
