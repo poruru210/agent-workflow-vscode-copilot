@@ -43,6 +43,12 @@ def main() -> None:
         '02 / 基本フロー',
         '03 / Subagent委譲',
         '04 / 失敗時の診断・修正',
+        '基本フロー上の位置',
+        '委譲 →',
+        '← 元のフェーズへ',
+        '診断 →',
+        '← 基本フローへ復帰',
+        '赤が失敗した位置、緑が代表的な再開候補',
         '復帰先は変更内容で決まる',
         '候補成果物を変更した',
         'テスト計画だけを変更した',
@@ -84,7 +90,8 @@ def main() -> None:
     for marker in placement_forbidden:
         assert marker not in visible, f'placement/install content leaked into motion guide: {marker}'
 
-    # Prevent the old three-lane/Z layout and meaningless sweep decoration from returning.
+    # Prevent the old three-lane/Z layout, decorative sweep, and the misleading
+    # continuous center rail/moving-dot presentation from returning.
     layout_forbidden = [
         'flow-layout',
         'Orchestration Sidecar',
@@ -95,9 +102,19 @@ def main() -> None:
         'grid-column:5',
         'grid-column:4',
         'animation:sweep',
+        '.trunk:before',
+        'class="traveler"',
+        'id="traveler"',
+        "getElementById('traveler')",
+        '.フェーズ',
     ]
     for marker in layout_forbidden:
         assert marker not in text, f'legacy/ambiguous visual marker remains: {marker}'
+
+    # Individual phase cards and explicit arrows are the only direction cue in
+    # the detailed basic flow.
+    assert '.phase:not(:last-child):after' in text, 'per-step downward arrows are missing'
+    assert 'class="phase' in text, 'phase cards are missing or lost their CSS class'
 
     assert text.index('id="overview"') < text.index('id="bootstrap"'), 'overview must precede detailed flows'
 
