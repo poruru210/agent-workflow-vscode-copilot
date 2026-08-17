@@ -1,4 +1,4 @@
-﻿$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Stop'
 $raw = [Console]::In.ReadToEnd()
 try { $data = $raw | ConvertFrom-Json } catch { $data = [pscustomobject]@{} }
 $cwd = if ($data.cwd) { [string]$data.cwd } else { (Get-Location).Path }
@@ -29,7 +29,7 @@ if($event -eq 'PreToolUse'){
   $phase=([string]$state.phase).ToLowerInvariant(); $tool=[string]$data.tool_name; $auditPhases=@('root-cause-challenge','root_cause_challenge','pre-action-audit','pre_action_audit','early-audit','early_audit','final-audit','final_audit'); $inAudit=$auditPhases -contains $phase
   if($inAudit -and (Tool-IsWrite $tool)){Emit @{hookSpecificOutput=@{hookEventName='PreToolUse';permissionDecision='deny';permissionDecisionReason="Agent Workflow phase $phase is read-only; candidate/target edits are forbidden during audit."}};exit 0}
   $cmd=Get-CommandText $data.tool_input
-  if($inAudit -and $cmd){if(Cmd-Mutating $cmd){Emit @{hookSpecificOutput=@{hookEventName='PreToolUse';permissionDecision='deny';permissionDecisionReason="Mutating terminal command blocked during read-only audit phase $phase."}};exit 0};if(-not (Cmd-ReadOnly $cmd)){Emit @{hookSpecificOutput=@{hookEventName='PreToolUse';permissionDecision='ask';permissionDecisionReason="Audit phase $phase: terminal command is not proven read-only; manual approval required."}};exit 0}}
+  if($inAudit -and $cmd){if(Cmd-Mutating $cmd){Emit @{hookSpecificOutput=@{hookEventName='PreToolUse';permissionDecision='deny';permissionDecisionReason="Mutating terminal command blocked during read-only audit phase $phase."}};exit 0};if(-not (Cmd-ReadOnly $cmd)){Emit @{hookSpecificOutput=@{hookEventName='PreToolUse';permissionDecision='ask';permissionDecisionReason="Audit phase ${phase}: terminal command is not proven read-only; manual approval required."}};exit 0}}
   Emit @{hookSpecificOutput=@{hookEventName='PreToolUse';permissionDecision='allow'}};exit 0
 }
 if($event -eq 'SubagentStart'){
