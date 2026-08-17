@@ -1,0 +1,54 @@
+name: Publish clean source branch
+
+on:
+  push:
+    branches: [agent/initial-workflow]
+    paths:
+      - '.github/workflows/publish-clean-branch.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout materialized source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: agent/initial-workflow
+
+      - name: Verify source before publishing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -r validation/requirements.txt
+          cd extension
+          npm install --ignore-scripts --no-audit --no-fund
+          cd ..
+          python validation/validate.py
+          sha256sum --check MANIFEST.sha256
+
+      - name: Build clean one-commit branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent-workflow-source
+          rsync -a ./ /tmp/agent-workflow-source/ \
+            --exclude='.git/' \
+            --exclude='.github/workflows/bootstrap-source.yml' \
+            --exclude='.github/workflows/cleanup-bootstrap.yml' \
+            --exclude='.github/workflows/publish-clean-branch.yml' \
+            --exclude='extension/node_modules/'
+
+          git fetch origin main
+          git switch --force-create agent/final-workflow origin/main
+          git rm -r --ignore-unmatch .
+          rsync -a /tmp/agent-workflow-source/ ./
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add VS Code Copilot agent workflow"
+          git push --force origin agent/final-workflow
