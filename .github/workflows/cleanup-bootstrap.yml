@@ -1,0 +1,29 @@
+name: Cleanup bootstrap
+
+on:
+  push:
+    branches: [agent/initial-workflow]
+    paths:
+      - '.github/workflows/cleanup-bootstrap.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remove temporary bootstrap workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/bootstrap-source.yml .github/workflows/cleanup-bootstrap.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Remove bootstrap workflow"
+          git push origin HEAD:agent/initial-workflow
