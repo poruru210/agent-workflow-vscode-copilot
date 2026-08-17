@@ -10,34 +10,68 @@ ROOT = Path(__file__).resolve().parents[1]
 DOC = ROOT / 'docs' / 'index.html'
 
 
-class StrictEnoughHTMLParser(HTMLParser):
-    pass
+class MotionGuideParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.skip_depth = 0
+        self.text: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs) -> None:
+        if tag.lower() in {'script', 'style'}:
+            self.skip_depth += 1
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() in {'script', 'style'} and self.skip_depth:
+            self.skip_depth -= 1
+
+    def handle_data(self, data: str) -> None:
+        if not self.skip_depth and data.strip():
+            self.text.append(data.strip())
 
 
 def main() -> None:
     assert DOC.is_file(), 'docs/index.html is missing'
     text = DOC.read_text(encoding='utf-8')
 
-    parser = StrictEnoughHTMLParser()
+    parser = MotionGuideParser()
     parser.feed(text)
     parser.close()
+    visible = ' '.join(parser.text)
 
     required = [
-        '02 / Main Trunk',
-        '03 / Orchestration',
-        '04 / Failure & Correction',
-        '委譲は「主幹のphaseから呼び、結果を同じphaseへ返す」',
-        'FAIL時だけ主幹から一時離脱する',
-        'Dynamic Model Routing',
+        '全体像',
+        '02 / 基本フロー',
+        '03 / Subagent委譲',
+        '04 / 失敗時の診断・修正',
+        '復帰先は変更内容で決まる',
+        '候補成果物を変更した',
+        'テスト計画だけを変更した',
+        '追加証拠だけで再判定できる',
+        '外部操作の計画・対象・権限が変わった',
+        '06 / 動的モデル選択',
         '成果鍵',
         '独立反証鍵',
     ]
     for marker in required:
-        assert marker in text, f'missing visual-guide marker: {marker}'
+        assert marker in visible, f'missing visual-guide marker: {marker}'
 
-    # The visual guide explains runtime motion only. Installation, deployment,
-    # repository/global placement, CI packaging, and artifact acquisition belong
-    # in README and must not drift back into docs/index.html.
+    # User-facing Japanese should not regress to the previous literal or mixed wording.
+    language_forbidden = [
+        '主幹',
+        'phaseから',
+        'phase内',
+        'candidate固定',
+        'material risk',
+        'freshnessだけ',
+        'job requirements',
+        'minimum sufficient model',
+        '#workflowモデル選択s',
+        'モデル選択 Selection',
+    ]
+    for marker in language_forbidden:
+        assert marker not in visible, f'awkward/mixed user-facing wording remains: {marker}'
+
+    # The visual guide explains workflow motion only. Installation/deployment belongs in README.
     placement_forbidden = [
         'Repository配置',
         'Global配置',
@@ -48,10 +82,9 @@ def main() -> None:
         '<repo>/.github/',
     ]
     for marker in placement_forbidden:
-        assert marker not in text, f'placement/install content leaked into motion guide: {marker}'
+        assert marker not in visible, f'placement/install content leaked into motion guide: {marker}'
 
-    # Prevent the previous visually ambiguous three-lane/Z-style main-flow layout
-    # and decorative sweep animations from returning.
+    # Prevent the old three-lane/Z layout and meaningless sweep decoration from returning.
     layout_forbidden = [
         'flow-layout',
         'Orchestration Sidecar',
@@ -66,6 +99,8 @@ def main() -> None:
     for marker in layout_forbidden:
         assert marker not in text, f'legacy/ambiguous visual marker remains: {marker}'
 
+    assert text.index('id="overview"') < text.index('id="bootstrap"'), 'overview must precede detailed flows'
+
     scripts = re.findall(r'<script>(.*?)</script>', text, flags=re.S | re.I)
     assert scripts, 'embedded JavaScript is missing'
     js = '\n'.join(scripts)
@@ -76,7 +111,7 @@ def main() -> None:
     result = subprocess.run(['node', '--check', js_path], text=True, capture_output=True)
     assert result.returncode == 0, result.stderr or result.stdout
 
-    print('docs/index.html motion-guide validation PASS')
+    print('docs/index.html language/motion validation PASS')
 
 
 if __name__ == '__main__':
