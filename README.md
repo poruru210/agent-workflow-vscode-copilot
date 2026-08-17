@@ -16,7 +16,7 @@ Custom Agents、Agent Skills、Hooks、durable state、独立監査、分割検�
 
 - [Copilot Agent Workflow — Animated Visual Guide](docs/index.html)
 
-主幹フローは中央を上から下へ流れる Normal Success Path とし、左に Orchestrator / model routing / subagent、右に FAIL / correction loop を分離しています。
+Visual guide は **主幹の正常成功経路**、**phase 内で行う Orchestrator → subagent の委譲と結果統合**、**FAIL 時だけ主幹から一時離脱する diagnosis / correction と復帰**を別々の図として説明します。
 
 ## Repository layout
 
