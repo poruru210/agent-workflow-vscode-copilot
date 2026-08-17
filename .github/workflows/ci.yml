@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build, test, and package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install workflow test dependency
+        run: python -m pip install -r tests/requirements.txt
+      - name: Validate workflow source
+        run: python tests/test_workflow.py
+      - name: Install extension dependencies
+        working-directory: extension
+        run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Build and test extension
+        working-directory: extension
+        run: npm test
+      - name: Package VSIX
+        working-directory: extension
+        run: npm run package:vsix
+      - name: Package workflow directory
+        run: |
+          cd workflow
+          zip -r ../agent-workflow-vscode-copilot-workflow.zip .
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: agent-workflow-vscode-copilot
+          path: |
+            extension/dist/agent-workflow-model-catalog-0.3.0.vsix
+            agent-workflow-vscode-copilot-workflow.zip
+          if-no-files-found: error
+
+  windows-hook:
+    name: Windows hook smoke test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Test PowerShell hook
+        shell: pwsh
+        run: ./tests/test_hook.ps1

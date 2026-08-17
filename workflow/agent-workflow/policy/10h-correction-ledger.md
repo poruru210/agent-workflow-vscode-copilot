@@ -1,0 +1,5 @@
+### 共通修正回数台帳ゲート
+
+監査finding、mechanical preflight、分割テスト、全体回帰、テスト対象同一性、package・runtime・実環境確認、診断性変更その他の検出源を問わず、修正実装前に同じ共通台帳を確認する。台帳には、根本原因ID、該当するVER・VM・TEST-RC・INT・CHG IDとversion、必須failure、mandatory identity failureまたは未達受入条件のID、因果証拠、検出源、影響範囲、correction batch番号、修正内容、修正前U0 version、修正後U1 version、固定した実装snapshot、検証結果に加え、修正前後の目的達成状態、planned/actual deltaとpreservation contractの差分、INT予測とCHG actual deltaの差分、受入条件の差分、根本原因の解消・縮小・残存、発生または閉じた変更誘発failure、判断を変える新しい証拠、次の作業と期待する成果、その作業と他のeligible workのrisk調整後価値、累積costを記録する。一つの根本原因に対する関連変更をまとめて実装し新しいsnapshotを固定した単位を1 correction batchと数える。
+
+同一根本原因、同じVM claim、同じ必須failure、または同じmandatory identity failureが修正後に再露出した場合は、回数にかかわらず、前回と異なる識別証拠、反証可能な予測、共有原因へ作用する変更、および次の判断を変える合理的見込みがなければ次の局所patchへ進まない。これらがあり、追加cost・手戻りriskを含めても主目的上の期待価値が他のeligible work以上なら継続できる。なければ責任境界、VM、設計、前提、観測方法を再導出し、再設計・再計画または次項の退出へ移る。correction batch数は履歴、傾向、再設計を促すwarningとして記録できるが、固定回数を継続、停止、目的達成、完了またはNo-Goの決定条件にしない。別根本原因として扱うには、異なる因果経路と責任層を示し、以前の原因では説明できないことを示す新しい因果証拠が必要である。単なる症状名、test名、test-plan version、監査者、model、発見phaseの違いを別原因の根拠にしない。

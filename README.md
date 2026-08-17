@@ -1,99 +1,50 @@
-# VS Code Copilot Agent Workflow — verified package
+# agent-workflow-vscode-copilot
 
-[![CI](https://github.com/poruru210/agent-workflow-vscode-copilot/actions/workflows/ci.yml/badge.svg)](https://github.com/poruru210/agent-workflow-vscode-copilot/actions/workflows/ci.yml)
+VS Code GitHub Copilot専用のAgent Workflowです。Custom Agents、Agent Skills、Hooks、動的model routing用Extensionをソースとして管理します。
 
-VS Code GitHub Copilot専用のAgent Workflowです。`Global Workflow Core`という別抽象層はありません。
-
-## 構成
+## Repository layout
 
 ```text
-vscode-copilot-agent-workflow-verified/
-├─ workflow/                      # 唯一のworkflow正本
+.
+├─ workflow/
 │  ├─ agents/
 │  ├─ skills/
 │  ├─ hooks/
 │  ├─ instructions/
 │  └─ agent-workflow/
-│     ├─ scripts/
-│     ├─ policy/
-│     └─ state-template/
 ├─ extension/
-│  ├─ src/                        # Extensionソースの正本
+│  ├─ src/
 │  ├─ test/
-│  ├─ out/                        # TypeScript compile結果
-│  └─ dist/agent-workflow-model-catalog-0.3.0.vsix            # インストール用VSIX
-├─ validation/
-├─ VALIDATION.md
-└─ MANIFEST.sha256
+│  └─ package.json
+├─ tests/
+└─ .github/workflows/ci.yml
 ```
 
-`global/` と `repository/` の複製はありません。
+生成物 (`extension/out`, `extension/dist`, VSIX) はGit管理しません。GitHub Actionsがソースからbuild/test/packageし、Actions artifactとして次を出力します。
 
-## Repository配置
+- `agent-workflow-model-catalog-0.3.0.vsix`
+- `agent-workflow-vscode-copilot-workflow.zip`
 
-`workflow/` の**中身**を、対象repositoryの `.github/` へコピーします。
+## 配置
 
-```text
-<repo>/.github/
-├─ agents/
-├─ skills/
-├─ hooks/
-├─ instructions/
-└─ agent-workflow/
-```
+CI artifactの `agent-workflow-vscode-copilot-workflow.zip` は同一内容を用途に応じて配置します。
 
-## Global配置
+- Repository: zipの中身を `<repo>/.github/` へ
+- Global: zipの中身を `~/.copilot/` へ
 
-同じ `workflow/` の**中身**を、ユーザープロファイルの `.copilot/` へコピーします。
+Model Catalog ExtensionはActions artifactのVSIXを VS Code の `Extensions: Install from VSIX...` からインストールします。
 
-Windows:
+## Dynamic model routing
 
-```text
-%USERPROFILE%\.copilot```
+Custom Agentにはmodelを固定しません。Orchestratorはlive model catalog、job requirements、risk、independence、cost/latency evidence、検証容易性からsubagent invocationごとに最低十分なmodelを選択します。
 
-Linux/macOS:
-
-```text
-~/.copilot/
-```
-
-## Model Catalog Extension
-
-ワークフローの動的model routingを補助するExtensionです。Extension自身はmodelを選定・順位付けしません。
-
-インストールするファイル:
-
-```text
-extension/dist/agent-workflow-model-catalog-0.3.0.vsix
-```
-
-VS Codeで `Extensions: Install from VSIX...` を実行するか、CLIで:
+## Development
 
 ```bash
-code --install-extension extension/dist/agent-workflow-model-catalog-0.3.0.vsix
+python -m pip install -r tests/requirements.txt
+python tests/test_workflow.py
+cd extension
+npm install
+npm test
+npm run package:vsix
 ```
-
-インストール後、VS CodeをReloadし、`Agent Workflow: Show Live Model Catalog` またはAgent側の `#workflowModels` を利用できます。
-
-## 動的モデル選定
-
-Custom Agentには `model:` を固定していません。Workflow Orchestratorがsubagent invocationごとにlive catalog、job requirement、risk、独立性、cost/latency evidence、検証容易性から最低十分なmodelを選びます。
-
-## 検証結果
-
-詳細は `VALIDATION.md` を参照してください。実行可能な決定的検証はPASSしています。実VS Code/Copilot hostを必要とする項目は、実行環境にVS Code本体がないため `UNVERIFIED` のまま明示しています。
-
-## CI
-
-GitHub Actions (`.github/workflows/ci.yml`) では Ubuntu / Windows の両方で検証します。
-
-- workflow構造・frontmatter・relative link・固定model不在
-- Python Hookのphase enforcement / path resolution / checkpoint
-- Windows runnerでPowerShell Hookのparseと主要behavior
-- TypeScript 5.8.3 build
-- Model Catalogのunit/mock activation test
-- 同梱VSIXの構造・identity・決定的再生成
-- 公式 `@vscode/vsce 3.9.2` による再package
-- `MANIFEST.sha256` の整合性
-
-実Copilotアカウントを必要とするlive model catalog列挙はCIの必須PASSにはしていません。

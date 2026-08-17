@@ -1,0 +1,16 @@
+{
+  "workflowVersion": "2026-08-17-vscode-verified-1",
+  "initializedAt": null,
+  "activeObjective": null,
+  "phase": "uninitialized",
+  "risk": null,
+  "workDefinitionVersion": null,
+  "baselineId": null,
+  "candidateId": null,
+  "releaseCandidateId": null,
+  "mandatoryOpenClaims": [],
+  "jobLedger": ".agent-workflow/jobs/",
+  "evidenceMap": ".agent-workflow/evidence-map.json",
+  "nextStep": null,
+  "status": "uninitialized"
+}

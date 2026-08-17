@@ -1,0 +1,6 @@
+extension/node_modules/
+extension/out/
+extension/dist/
+.agent-workflow/
+__pycache__/
+*.pyc
